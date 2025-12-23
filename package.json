@@ -1,0 +1,24 @@
+{
+  "name": "foe_data",
+  "version": "1.0.0",
+  "description": "Chrome extension to generate and download Excel files.",
+  "main": "src/background.js",
+  "scripts": {
+    "build": "echo 'Build script placeholder'",
+    "test": "echo 'Test script placeholder'"
+  },
+  "dependencies": {
+    "xlsx": "^0.17.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0"
+  },
+  "keywords": [
+    "chrome",
+    "extension",
+    "excel",
+    "download"
+  ],
+  "author": "onosenday",
+  "license": "MIT"
+}

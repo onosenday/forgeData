@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "ForgeData",
+  "version": "1.2",
+  "description": "Exporta y analiza datos de Forge of Empires. Genera Excel de eficiencia militar.",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://*.forgeofempires.com/*"
+  ],
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "lib/xlsx.mini.min.js"
+      ],
+      "matches": [
+        "*://*.forgeofempires.com/*"
+      ]
+    }
+  ]
+}

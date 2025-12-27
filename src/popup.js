@@ -3,66 +3,129 @@
  * Exporta datos de Forge of Empires a JSON y Excel
  */
 
+const CLICK_THRESHOLD = 25;
+let logoClicks = 0;
+
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('btnJson').addEventListener('click', () => exportData('json'));
-    document.getElementById('btnEfficiency').addEventListener('click', () => exportData('efficiency'));
-    document.getElementById('btnCatalog').addEventListener('click', () => exportData('catalog'));
-
-    // Disparador secreto: 25 clics en el logo para mostrar el botón JSON
-    const logo = document.getElementById('logo');
-    let clickCount = 0;
-    let lastClickTime = 0;
-
-    if (logo) {
-        logo.addEventListener('click', () => {
-            const currentTime = new Date().getTime();
-            if (currentTime - lastClickTime > 1000) clickCount = 0;
-            lastClickTime = currentTime;
-            clickCount++;
-
-            if (clickCount >= 25) {
-                document.getElementById('btnJson').style.display = 'flex';
-                logo.style.transform = 'rotate(360deg)';
-                logo.style.transition = 'transform 0.5s';
-                showToast('Modo Desarrollador Activado', 'success');
+    // Secret JSON button logic
+    const imgLogo = document.getElementById('logo');
+    if (imgLogo) {
+        imgLogo.addEventListener('click', () => {
+            logoClicks++;
+            if (logoClicks === CLICK_THRESHOLD) {
+                document.getElementById('btnJson').classList.remove('hidden');
+                showToast('¡Modo Dios activado!', 'success');
             }
         });
     }
+
+    // Load Settings
+    loadSettings();
+
+    // View Navigation
+    document.getElementById('btnSettings').addEventListener('click', () => toggleView('settings'));
+    document.getElementById('btnBack').addEventListener('click', () => toggleView('main'));
+
+    // Settings Listeners
+    document.querySelectorAll('input[name="downloadMode"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            updateSubfolderInputState();
+            saveSettings();
+        });
+    });
+
+    document.getElementById('inputSubfolder').addEventListener('input', saveSettings);
+
+    document.getElementById('btnJson').addEventListener('click', () => exportData('json'));
+    document.getElementById('btnEfficiency').addEventListener('click', () => exportData('efficiency'));
+    document.getElementById('btnCatalog').addEventListener('click', () => exportData('catalog'));
 });
 
-// Ayudantes de Interfaz (UI)
+// Settings Management
+const DEFAULT_SETTINGS = {
+    downloadMode: 'default', // default, subfolder, ask
+    downloadSubfolder: 'FoE_Data'
+};
+
+let currentSettings = { ...DEFAULT_SETTINGS };
+
+function loadSettings() {
+    chrome.storage.local.get(DEFAULT_SETTINGS, (items) => {
+        currentSettings = items;
+
+        // Update UI
+        const radio = document.querySelector(`input[name="downloadMode"][value="${currentSettings.downloadMode}"]`);
+        if (radio) radio.checked = true;
+
+        const inputSub = document.getElementById('inputSubfolder');
+        if (inputSub) inputSub.value = currentSettings.downloadSubfolder;
+
+        updateSubfolderInputState();
+    });
+}
+
+function saveSettings() {
+    const mode = document.querySelector('input[name="downloadMode"]:checked').value;
+    const subfolder = document.getElementById('inputSubfolder').value.trim() || 'FoE_Data';
+
+    currentSettings = {
+        downloadMode: mode,
+        downloadSubfolder: subfolder
+    };
+
+    chrome.storage.local.set(currentSettings);
+}
+
+function updateSubfolderInputState() {
+    const mode = document.querySelector('input[name="downloadMode"]:checked').value;
+    const input = document.getElementById('inputSubfolder');
+    if (input) {
+        input.disabled = (mode !== 'subfolder');
+        input.style.opacity = (mode === 'subfolder') ? '1' : '0.5';
+    }
+}
+
+function toggleView(viewName) {
+    const mainView = document.getElementById('main-view');
+    const settingsView = document.getElementById('settings-view');
+
+    if (viewName === 'settings') {
+        mainView.classList.remove('active');
+        settingsView.classList.add('active');
+    } else {
+        settingsView.classList.remove('active');
+        mainView.classList.add('active');
+    }
+}
+
 function showToast(message, type = 'info') {
-    const container = document.getElementById('toastContainer');
+    const container = document.getElementById('toast-container');
+    if (!container) return alert(message); // Fallback
+
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     toast.textContent = message;
 
     container.appendChild(toast);
 
-    // Activar animación
-    setTimeout(() => toast.classList.add('show'), 10);
-
-    // Eliminar después de 3 segundos
+    // Auto remove
     setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
-    }, 4000);
+        toast.remove();
+    }, 3000);
 }
 
 function setLoading(isLoading) {
-    const overlay = document.getElementById('loadingOverlay');
-    if (isLoading) {
-        overlay.style.display = 'flex';
-        document.querySelectorAll('button').forEach(btn => btn.disabled = true);
-    } else {
-        overlay.style.display = 'none';
-        document.querySelectorAll('button').forEach(btn => btn.disabled = false);
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) {
+        overlay.style.display = isLoading ? 'flex' : 'none';
+        // Force layout repaint to ensure spinner spins
+        if (isLoading) overlay.offsetHeight;
     }
 }
 
 async function exportData(type) {
+    setLoading(true);
     try {
-        setLoading(true);
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
         // Ejecutar script en el juego y obtener datos de vuelta
@@ -217,30 +280,12 @@ async function exportData(type) {
                 // ============================================
 
                 if (exportType === 'json') {
-                    const cityMap = MainParser.CityMapData || {};
-                    const cityEntities = MainParser.CityEntities || window.buildingData || {};
-
-                    const data = {
-                        city: Object.values(cityMap),
-                        meta: cityEntities,
-                        exportDate: new Date().toISOString(),
-                        info: "Generated by ForgeData - Own Buildings"
-                    };
-
-                    // Reemplazo simple circular por si acaso, aunque apuntar a datos específicos suele evitar el gran lío
-                    const simpleStringify = (obj) => {
-                        const cache = new Set();
-                        return JSON.stringify(obj, (key, value) => {
-                            if (typeof value === 'object' && value !== null) {
-                                if (cache.has(value)) return;
-                                cache.add(value);
-                            }
-                            return value;
-                        });
-                    };
-
-                    // Lo analizamos de vuelta para que pueda pasarse como resultado del mensaje
-                    return { type: 'json', data: JSON.parse(simpleStringify(data)), filename: `foe_city_data_${timestamp}.json` };
+                    const data = safeClone({
+                        MainParser: MainParser,
+                        buildingData: window.buildingData || null,
+                        exportDate: new Date().toISOString()
+                    });
+                    return { type: 'json', data: data, filename: `foe_data_${timestamp}.json` };
                 }
 
                 // ============================================
@@ -300,7 +345,7 @@ async function exportData(type) {
                             eraName: townHallEra,
                             count: 1,
                             size_total: width * length,
-                            streetLevel: streetLevel, // Guardamos el nivel de calle para el cálculo
+                            streetLevel: streetLevel,
                             needStreet: needStreetAsText(streetLevel),
                             ...boosts
                         });
@@ -444,7 +489,7 @@ async function exportData(type) {
                         // Expandir boosts especiales y combinados
                         const expanded = {};
 
-                        // Definición de expansiones (CORREGIDO: Usar guiones bajos consistentemente)
+                        // Definición de expansiones (CORREGIDO: Usar underscores consistently)
                         const expansions = {
                             // All Age
                             'all_fierce_resistance': ['all_att_boost_defender', 'all_def_boost_defender'],
@@ -462,12 +507,12 @@ async function exportData(type) {
                             // Guild Expedition (Expe)
                             'guild_expedition_att_def_boost_attacker': ['guild_expedition_att_boost_attacker', 'guild_expedition_def_boost_attacker'],
                             'guild_expedition_att_def_boost_defender': ['guild_expedition_att_boost_defender', 'guild_expedition_def_boost_defender'],
-                            'guild_expedition_att_def_boost_attacker_defender': ['guild_expedition_att_boost_attacker', 'guild_expedition_def_boost_attacker', 'guild_expedition_att_boost_defender', 'guild_expedition_def_boost_defender'],
+                            'guild_expedition_att_def_boost_attacker_defender': ['guild_expedition_att_boost_attacker', 'guild_expedition_def_boost_attacker', 'guild_expedition-def_boost_defender', 'guild_expedition-def_boost_defender'],// CORREGIDO
 
                             // Guild Raids (IC)
                             'guild_raids_att_def_boost_attacker': ['guild_raids_att_boost_attacker', 'guild_raids_def_boost_attacker'],
                             'guild_raids_att_def_boost_defender': ['guild_raids_att_boost_defender', 'guild_raids_def_boost_defender'],
-                            'guild_raids_att_def_boost_attacker_defender': ['guild_raids_att_boost_attacker', 'guild_raids_def_boost_attacker', 'guild_raids_att_boost_defender', 'guild_raids_def_boost_defender']
+                            'guild_raids_att_def_boost_attacker_defender': ['guild_raids_att_boost_attacker', 'guild_raids_def_boost_attacker', 'guild_raids-att_boost_defender', 'guild_raids-def_boost_defender']// CORREGIDO
                         };
 
                         for (const key in boosts) {
@@ -582,20 +627,14 @@ async function exportData(type) {
             // Descargar JSON
             const jsonString = JSON.stringify(result.data, null, 2);
             downloadFile(jsonString, result.filename, 'application/json');
-
-            let count = 0;
-            if (result.data.city && Array.isArray(result.data.city)) {
-                count = result.data.city.length;
-            } else if (result.data.MainParser?.CityMapData) {
-                count = Object.keys(result.data.MainParser.CityMapData).length;
-            }
-
-            showToast(`JSON exportado: ${count} edificios`, 'success');
+            const count = result.data.MainParser?.CityMapData ? Object.keys(result.data.MainParser.CityMapData).length : 0;
+            showToast(`JSON exportado (${count} edificios)`, 'success');
             return;
         }
 
         if (result.type === 'excel') {
             // Generar Excel con ExcelJS (con iconos)
+            // Ordenar las hojas
             const sheetOrder = ['Bono Completo', 'Bono CdB', 'Bono Expe', 'Bono IC', 'Excluídos'];
             const orderedSheets = {};
             for (const sheetName of sheetOrder) {
@@ -609,7 +648,7 @@ async function exportData(type) {
                 showToast(`Excel generado: ${stats.totalRows} edificios`, 'success');
             } catch (e) {
                 console.error('Error generando Excel:', e);
-                showToast('Error generando Excel: ' + e.message, 'error');
+                showToast('Error generando Excel', 'error');
             }
             return;
         }
@@ -618,17 +657,16 @@ async function exportData(type) {
             // Generar Catálogo con ExcelJS (con iconos)
             try {
                 const stats = await generateExcelWithIcons(result.sheets, result.filename);
-                showToast(`Catálogo generado: ${stats.totalRows} filas`, 'success');
+                showToast(`Catálogo generado: ${stats.totalRows} edificios`, 'success');
             } catch (e) {
                 console.error('Error generando Catálogo:', e);
-                showToast('Error generando Catálogo: ' + e.message, 'error');
+                showToast('Error generando Catálogo', 'error');
             }
             return;
         }
-
-    } catch (error) {
-        console.error(error);
-        showToast('Error inesperado: ' + error.message, 'error');
+    } catch (e) {
+        showToast('Error: ' + e.message, 'error');
+        console.error(e);
     } finally {
         setLoading(false);
     }
@@ -641,11 +679,40 @@ function downloadFile(content, filename, type) {
 
 function downloadBlob(blob, filename) {
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
+
+    let finalFilename = filename;
+    let saveAs = false;
+
+    // Apply Settings
+    if (currentSettings.downloadMode === 'ask') {
+        saveAs = true;
+    } else if (currentSettings.downloadMode === 'subfolder') {
+        // Sanitize folder name
+        let folder = currentSettings.downloadSubfolder.replace(/[<>:"/\\|?*]/g, '');
+        if (!folder) folder = 'FoE_Data';
+        finalFilename = `${folder}/${filename}`;
+        saveAs = false;
+    } else {
+        // Default (Downloads root)
+        saveAs = false;
+    }
+
+    chrome.downloads.download({
+        url: url,
+        filename: finalFilename,
+        saveAs: saveAs
+    }, (downloadId) => {
+        // Revoke URL after a short delay
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+        if (chrome.runtime.lastError) {
+            console.log("Download action exception:", chrome.runtime.lastError);
+            showToast("Error descarga: " + chrome.runtime.lastError.message, 'error');
+        } else {
+            // Optional: Show success if "Save As" wasn't used
+            if (!saveAs) showToast("Archivo guardado", 'success');
+        }
+    });
 }
 
 // Función para generar Excel con iconos usando ExcelJS
@@ -693,10 +760,10 @@ async function generateExcelWithIcons(sheets, filename) {
         const worksheet = workbook.addWorksheet(sheetName.substring(0, 31));
         const headers = sheetData[0];
 
-        // Añadir encabezados con estilo
+        // Añadir headers con estilo
         const headerRow = worksheet.addRow(headers);
 
-        // Configurar altura de la fila de encabezado
+        // Configurar altura de la fila de header
         headerRow.height = 40;
         headerRow.eachCell((cell) => {
             cell.alignment = { vertical: 'middle', horizontal: 'center' };
@@ -708,7 +775,7 @@ async function generateExcelWithIcons(sheets, filename) {
             worksheet.addRow(sheetData[i]);
         }
 
-        // Añadir iconos en los encabezados
+        // Añadir iconos en los headers
         for (let colIdx = 0; colIdx < headers.length; colIdx++) {
             const header = headers[colIdx];
             let iconKey = header;
@@ -717,7 +784,7 @@ async function generateExcelWithIcons(sheets, filename) {
             if (translationMap[header]) {
                 iconKey = translationMap[header];
             } else if (typeof header === 'string') {
-                // 2. Normalizar guiones a guiones bajos
+                // 2. Normalizar guiones a underscores
                 iconKey = header.replace(/-/g, '_');
             }
 
@@ -738,7 +805,7 @@ async function generateExcelWithIcons(sheets, filename) {
                         editAs: 'oneCell'
                     });
 
-                    // Limpiar el texto del encabezado y ajustar ancho
+                    // Limpiar el texto del header y ajustar ancho
                     worksheet.getCell(1, colIdx + 1).value = '';
                     worksheet.getColumn(colIdx + 1).width = 6;
                 } catch (e) {
@@ -755,9 +822,7 @@ async function generateExcelWithIcons(sheets, filename) {
 
         const eficienciaIdx = headers.indexOf('Eficiencia');
         if (eficienciaIdx !== -1) {
-            const col = worksheet.getColumn(eficienciaIdx + 1);
-            col.width = 12;
-            col.numFmt = '0.00'; // Forzar 2 decimales
+            worksheet.getColumn(eficienciaIdx + 1).width = 12;
         }
     }
 

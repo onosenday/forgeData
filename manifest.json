@@ -5,7 +5,9 @@
   "description": "Exporta y analiza datos de Forge of Empires. Genera Excel de eficiencia militar.",
   "permissions": [
     "activeTab",
-    "scripting"
+    "scripting",
+    "downloads",
+    "storage"
   ],
   "host_permissions": [
     "*://*.forgeofempires.com/*"
@@ -23,6 +25,18 @@
       "128": "images/icon128.png"
     }
   },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.forgeofempires.com/game/index*"
+      ],
+      "js": [
+        "src/interceptor.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN"
+    }
+  ],
   "web_accessible_resources": [
     {
       "resources": [

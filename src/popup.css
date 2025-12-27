@@ -1,0 +1,348 @@
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+    --foe-gold: #ffc107;
+    --foe-gold-dark: #bfa305;
+    --foe-gold-light: #ffeb3b;
+    --foe-brown: #3e2723;
+    --foe-brown-light: #5d4037;
+    --foe-bg: #1e1e1e;
+    --foe-panel: #2d2d2d;
+    --foe-text: #f5f5f5;
+    --foe-text-muted: #bdbdbd;
+    --foe-border: #8d6e63;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--foe-bg);
+    background-image: linear-gradient(rgba(30, 30, 30, 0.9), rgba(30, 30, 30, 0.9)), url('patterns/stone.png');
+    /* Fallback if no image */
+    color: var(--foe-text);
+    min-width: 350px;
+    overflow-x: hidden;
+}
+
+/* Header */
+header {
+    background: linear-gradient(to bottom, #4e342e, #3e2723);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--foe-gold-dark);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+    font-family: 'Roboto Slab', serif;
+    font-size: 20px;
+    margin: 0;
+    color: var(--foe-gold);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.settings-btn {
+    background: none;
+    border: none;
+    color: var(--foe-gold);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 4px;
+    transition: transform 0.2s;
+}
+
+.settings-btn:hover {
+    transform: rotate(45deg);
+    color: var(--foe-gold-light);
+}
+
+/* Main Container */
+.container {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Buttons */
+.btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+button.foe-btn {
+    background: linear-gradient(to bottom, #ffca28, #ff6f00);
+    border: 1px solid #ff6f00;
+    border-radius: 4px;
+    padding: 12px;
+    color: #3e2723;
+    font-family: 'Roboto Slab', serif;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 0 4px 0 #bf360c, 0 5px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    text-align: left;
+    gap: 12px;
+    transition: all 0.1s;
+    position: relative;
+    overflow: hidden;
+}
+
+button.foe-btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.1);
+    box-shadow: 0 5px 0 #bf360c, 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+button.foe-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #bf360c;
+}
+
+/* Button Variants */
+.btn-json {
+    background: linear-gradient(to bottom, #4fc3f7, #0288d1);
+    border-color: #0277bd;
+    color: #0d47a1;
+    box-shadow: 0 4px 0 #01579b, 0 5px 10px rgba(0, 0, 0, 0.3);
+    /* Hidden logic handled via ID in CSS or JS */
+}
+
+.btn-json:hover {
+    box-shadow: 0 5px 0 #01579b, 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.btn-json:active {
+    box-shadow: 0 2px 0 #01579b;
+}
+
+.btn-efficiency {
+    /* Gold is default defined in foe-btn */
+    background: linear-gradient(to bottom, #ffca28, #ff6f00);
+    color: #3e2723;
+}
+
+.btn-catalog {
+    background: linear-gradient(to bottom, #9ccc65, #558b2f);
+    border-color: #33691e;
+    color: #1b5e20;
+    box-shadow: 0 4px 0 #1b5e20, 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.btn-catalog:hover {
+    box-shadow: 0 5px 0 #1b5e20, 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.btn-catalog:active {
+    box-shadow: 0 2px 0 #1b5e20;
+}
+
+
+.icon {
+    font-size: 24px;
+    width: 30px;
+    text-align: center;
+}
+
+.btn-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-desc {
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    opacity: 0.8;
+    text-transform: none;
+    margin-top: 2px;
+}
+
+/* View Sections */
+.view-section {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.view-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Settings View */
+.settings-panel {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--foe-border);
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.settings-group {
+    margin-bottom: 15px;
+}
+
+.settings-label {
+    display: block;
+    color: var(--foe-gold);
+    font-family: 'Roboto Slab', serif;
+    margin-bottom: 8px;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+    padding-bottom: 4px;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.radio-label input[type="radio"] {
+    accent-color: var(--foe-gold);
+}
+
+.input-subfolder {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--foe-border);
+    color: var(--foe-text);
+    padding: 6px 8px;
+    border-radius: 4px;
+    margin-top: 4px;
+    margin-left: 24px;
+    width: calc(100% - 24px);
+    font-family: 'Roboto', sans-serif;
+}
+
+.input-subfolder:focus {
+    outline: 1px solid var(--foe-gold);
+    border-color: var(--foe-gold);
+}
+
+.disclaimer {
+    font-size: 11px;
+    color: var(--foe-text-muted);
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 4px;
+    border-left: 3px solid var(--foe-gold-dark);
+    margin-top: 10px;
+    line-height: 1.4;
+}
+
+.back-btn {
+    background: transparent;
+    border: 1px solid var(--foe-border);
+    color: var(--foe-text-muted);
+    padding: 8px;
+    width: 100%;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--foe-text);
+}
+
+
+/* Footer */
+.footer {
+    font-size: 11px;
+    text-align: center;
+    margin-top: 20px;
+    color: var(--foe-border);
+    border-top: 1px solid rgba(141, 110, 99, 0.3);
+    padding-top: 10px;
+}
+
+.footer a {
+    color: var(--foe-gold);
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+/* Toast & Spinner (Updates) */
+#toast-container {
+    bottom: 30px;
+}
+
+.toast {
+    background: #2d2d2d;
+    border: 1px solid var(--foe-gold-dark);
+    color: var(--foe-gold);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    font-family: 'Roboto Slab', serif;
+}
+
+.spinner {
+    border-color: rgba(255, 215, 0, 0.2);
+    border-top-color: var(--foe-gold);
+}
+
+/* Loading Overlay */
+#loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(26, 26, 46, 0.95);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 2000;
+    backdrop-filter: blur(4px);
+}
+
+.loading-text {
+    color: var(--foe-gold);
+    font-family: 'Roboto Slab', serif;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Hidden elements */
+.hidden {
+    display: none !important;
+}

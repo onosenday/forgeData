@@ -1,59 +1,58 @@
-# FoE Data Exporter
+# Forge of Empires Data & Efficiency Analyzer
 
-Extensión de Chrome para exportar datos del juego Forge of Empires a JSON y Excel.
+Esta extensión para Google Chrome es una herramienta de ayuda **pasiva** que te permite analizar la eficiencia de los edificios de tu ciudad en Forge of Empires y explorar el catálogo completo del juego.
+
+El objetivo es ayudarte a tomar decisiones estratégicas basadas en datos reales de eficiencia militar y de espacio.
+
+![Captura de pantalla](store_screenshot.png)
+
+## ⚠️ Transparencia y Privacidad
+
+Esta herramienta ha sido diseñada respetando las normas de juego limpio:
+
+*   **NO es un bot:** No realiza ninguna acción automática en el juego. Tu cuenta nunca realizará acciones sin tu interacción directa.
+*   **NO recoge datos personales:** Todos los datos se procesan **localmente** en tu navegador. Ninguna información sobre tu ciudad, tu cuenta o tus estadísticas se envía a servidores externos.
+*   **NO altera el juego:** Funciona únicamente leyendo los datos que el juego envía a tu navegador para generar informes en Excel.
 
 ## Funcionalidades
 
-### 📄 Exportar JSON
-Exporta todos los datos del juego:
-- `MainParser` con `CityMapData` (edificios de tu ciudad)
-- `buildingData` (catálogo completo de edificios)
+### 1. 📊 Análisis de Eficiencia de Ciudad (Excel)
+Genera un informe detallado en Excel de **tu ciudad actual**, calculando la eficiencia real de cada edificio.
 
-### 📊 Excel Eficiencia
-Genera un Excel con tus edificios organizados por **eficiencia de boosts** (boosts/tamaño):
-- **Bono Completo**: Todos los boosts
-- **Bono CdB**: Campo de Batalla
-- **Bono Expe**: Expedición de Gremio
-- **Bono IC**: Incursiones de Campo
+*   **Fórmula de Eficiencia:** Calcula el boost militar ofrecido por cada casilla ocupada, teniendo en cuenta el tamaño del edificio y si requiere carretera.
+*   **Hojas separadas:** Organiza los datos para diferentes modos de juego:
+    *   **Bono Completo:** Eficiencia global.
+    *   **Bono CdB:** Específico para Campos de Batalla.
+    *   **Bono Expe:** Específico para Expedición de Gremio.
+    *   **Bono IC:** Específico para Incursiones Cuánticas.
 
-### 📚 Excel Catálogo
-Genera un Excel con el **catálogo completo** de edificios del juego, organizado por era.
+### 2. 📚 Catálogo Completo del Juego (Excel)
+Descarga una base de datos con **todos los edificios que existen en el juego**, organizados por Era.
 
-## Requisitos
-
-- Chrome, Brave, Edge o similar
-- **FoE Helper** instalado y activo
+*   Ideal para planificar futuras ciudades o comparar edificios que aún no tienes.
+*   Incluye estadísticas de ataque/defensa para diferentes modos.
 
 ## Instalación
 
-1. Abre `chrome://extensions/`
-2. Activa **Modo desarrollador**
-3. Clic en **Cargar descomprimida**
-4. Selecciona la carpeta `foe_data`
+1. Descarga el código o el archivo ZIP de la última versión.
+2. Abre `chrome://extensions/` en tu navegador.
+3. Activa el **Modo para desarrolladores** (arriba a la derecha).
+4. Haz clic en **Cargar descomprimida** y selecciona la carpeta de la extensión.
 
 ## Uso
 
-1. Abre Forge of Empires y entra en tu ciudad
-2. Clic en el icono de la extensión
-3. Elige qué exportar:
-   - **Exportar JSON**: Datos crudos
-   - **Excel Eficiencia**: Análisis de tus edificios
-   - **Excel Catálogo**: Todos los edificios del juego
+1. Entra en tu ciudad en Forge of Empires.
+2. Haz clic en el icono de la extensión (brújula dorada) en la barra del navegador.
+3. Selecciona la opción deseada:
+    *   **Excel Eficiencia:** Para analizar lo que tienes construido ahora mismo.
+    *   **Excel Catálogo:** Para ver la lista de todos los edificios del juego.
 
-## Estructura del proyecto
+La extensión procesará los datos y descargará automáticamente el archivo `.xlsx` correspondiente.
 
-```
-foe_data/
-├── images/           # Iconos de la extensión
-├── lib/
-│   └── xlsx.mini.min.js  # SheetJS para Excel
-├── src/
-│   └── popup.js      # Lógica principal
-├── manifest.json
-├── popup.html
-└── README.md
-```
+## Configuración 
 
-## Licencia
+En el menú de ajustes de la extensión puedes configurar:
+*   **Ubicación de descarga:** Guardar en la carpeta por defecto, en una subcarpeta específica ("FoE_Data") o preguntar siempre dónde guardar cada archivo.
 
-MIT - Libre para uso y distribución.
+---
+**Nota:** Esta extensión no está afiliada ni respaldada por InnoGames. Es una herramienta creada por fans para fans.

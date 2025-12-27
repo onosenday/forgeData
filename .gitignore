@@ -10,5 +10,6 @@ foe_data_*.json
 city_map_export_*.json
 debug_keys.js
 src/config.js
-STORE_LISTING.md
 test/
+STORE_LISTING.md
+forge_data_v1.2.zip

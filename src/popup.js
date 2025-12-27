@@ -3,10 +3,26 @@
  * Exporta datos de Forge of Empires a JSON y Excel
  */
 
+import { analytics } from './analytics.js';
+
 const CLICK_THRESHOLD = 25;
 let logoClicks = 0;
 
 document.addEventListener('DOMContentLoaded', function () {
+    // Initialize Analytics
+    analytics.init().then(() => {
+        analytics.track('view_popup');
+
+        // Update checkbox state
+        const checkAnalytics = document.getElementById('checkAnalytics');
+        if (checkAnalytics) {
+            checkAnalytics.checked = analytics.enabled;
+            checkAnalytics.addEventListener('change', (e) => {
+                analytics.setEnabled(e.target.checked);
+            });
+        }
+    });
+
     // Secret JSON button logic
     const imgLogo = document.getElementById('logo');
     if (imgLogo) {
@@ -36,9 +52,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('inputSubfolder').addEventListener('input', saveSettings);
 
-    document.getElementById('btnJson').addEventListener('click', () => exportData('json'));
-    document.getElementById('btnEfficiency').addEventListener('click', () => exportData('efficiency'));
-    document.getElementById('btnCatalog').addEventListener('click', () => exportData('catalog'));
+    document.getElementById('btnJson').addEventListener('click', () => {
+        analytics.track('export_json');
+        exportData('json');
+    });
+    document.getElementById('btnEfficiency').addEventListener('click', () => {
+        analytics.track('export_efficiency');
+        exportData('efficiency');
+    });
+    document.getElementById('btnCatalog').addEventListener('click', () => {
+        analytics.track('export_catalog');
+        exportData('catalog');
+    });
 });
 
 // Settings Management

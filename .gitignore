@@ -10,3 +10,4 @@ STORE_LISTING.md
 foe_data_*.json
 city_map_export_*.json
 debug_keys.js
+src/config.js

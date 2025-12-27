@@ -11,8 +11,11 @@ El objetivo es ayudarte a tomar decisiones estratégicas basadas en datos reales
 Esta herramienta ha sido diseñada respetando las normas de juego limpio:
 
 *   **NO es un bot:** No realiza ninguna acción automática en el juego. Tu cuenta nunca realizará acciones sin tu interacción directa.
-*   **NO recoge datos personales:** Todos los datos se procesan **localmente** en tu navegador. Ninguna información sobre tu ciudad, tu cuenta o tus estadísticas se envía a servidores externos.
-*   **NO altera el juego:** Funciona únicamente leyendo los datos que el juego envía a tu navegador para generar informes en Excel.
+*   **NO recoge datos personales:** Todos los datos del juego se procesan **localmente**. 
+*   **Estadísticas de Uso Anónimas:** La extensión cuenta las veces que se usan los botones de exportación (ej: "Exportar Eficiencia") para saber qué funciones son útiles.
+    *   Esta función es **totalmente anónima** (usa un ID aleatorio, no tu usuario).
+    *   Puedes **desactivarla** en cualquier momento desde la Configuración.
+*   **NO altera el juego:** Funciona únicamente leyendo los datos que el juego envía a tu navegador.
 
 ## Funcionalidades
 

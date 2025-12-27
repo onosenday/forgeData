@@ -4,10 +4,10 @@ foe_data_cx.zip
 
 # Store assets and documentation
 
-STORE_LISTING.md
 
 # Data exports
 foe_data_*.json
 city_map_export_*.json
 debug_keys.js
 src/config.js
+STORE_LISTING.md

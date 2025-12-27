@@ -11,3 +11,4 @@ city_map_export_*.json
 debug_keys.js
 src/config.js
 STORE_LISTING.md
+test/

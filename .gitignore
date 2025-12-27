@@ -3,7 +3,7 @@ node_modules/\n.DS_Store\n*.log
 foe_data_cx.zip
 
 # Store assets and documentation
-store_screenshot.png
+
 STORE_LISTING.md
 
 # Data exports

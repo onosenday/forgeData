@@ -40,7 +40,8 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "lib/xlsx.mini.min.js"
+        "lib/xlsx.mini.min.js",
+        "src/lang/*.json"
       ],
       "matches": [
         "*://*.forgeofempires.com/*"

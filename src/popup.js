@@ -4,11 +4,18 @@
  */
 
 import { analytics } from './analytics.js';
+import { i18n, t } from './i18n.js';
 
 const CLICK_THRESHOLD = 25;
 let logoClicks = 0;
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
+    // Initialize i18n first
+    await i18n.init();
+
+    // Populate language selector
+    populateLanguageSelector();
+
     // Initialize Analytics
     analytics.init().then(() => {
         analytics.track('view_popup');
@@ -30,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
             logoClicks++;
             if (logoClicks === CLICK_THRESHOLD) {
                 document.getElementById('btnJson').classList.remove('hidden');
-                showToast('¡Modo Dios activado!', 'success');
+                showToast(t('toast.godMode'), 'success');
             }
         });
     }
@@ -51,6 +58,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.getElementById('inputSubfolder').addEventListener('input', saveSettings);
+
+    // Language selector
+    document.getElementById('selectLanguage').addEventListener('change', async (e) => {
+        await i18n.setLanguage(e.target.value);
+    });
 
     document.getElementById('btnJson').addEventListener('click', () => {
         analytics.track('export_json');
@@ -120,6 +132,25 @@ function toggleView(viewName) {
     } else {
         settingsView.classList.remove('active');
         mainView.classList.add('active');
+    }
+}
+
+function populateLanguageSelector() {
+    const select = document.getElementById('selectLanguage');
+    if (!select) return;
+
+    const languages = i18n.getAvailableLanguages();
+    const currentLang = i18n.getCurrentLanguage();
+
+    select.innerHTML = '';
+    for (const lang of languages) {
+        const option = document.createElement('option');
+        option.value = lang.code;
+        option.textContent = lang.name;
+        if (lang.code === currentLang) {
+            option.selected = true;
+        }
+        select.appendChild(option);
     }
 }
 
@@ -639,7 +670,7 @@ async function exportData(type) {
         const result = results?.find(r => r.result !== null)?.result;
 
         if (!result) {
-            showToast('No se encontraron datos. Asegúrate de estar en el juego.', 'error');
+            showToast(t('toast.noData'), 'error');
             return;
         }
 
@@ -653,7 +684,7 @@ async function exportData(type) {
             const jsonString = JSON.stringify(result.data, null, 2);
             downloadFile(jsonString, result.filename, 'application/json');
             const count = result.data.MainParser?.CityMapData ? Object.keys(result.data.MainParser.CityMapData).length : 0;
-            showToast(`JSON exportado (${count} edificios)`, 'success');
+            showToast(t('toast.jsonExported', { count }), 'success');
             return;
         }
 
@@ -670,10 +701,10 @@ async function exportData(type) {
 
             try {
                 const stats = await generateExcelWithIcons(orderedSheets, result.filename);
-                showToast(`Excel generado: ${stats.totalRows} edificios`, 'success');
+                showToast(t('toast.excelGenerated', { count: stats.totalRows }), 'success');
             } catch (e) {
                 console.error('Error generando Excel:', e);
-                showToast('Error generando Excel', 'error');
+                showToast(t('toast.error', { message: 'Excel' }), 'error');
             }
             return;
         }
@@ -682,15 +713,15 @@ async function exportData(type) {
             // Generar Catálogo con ExcelJS (con iconos)
             try {
                 const stats = await generateExcelWithIcons(result.sheets, result.filename);
-                showToast(`Catálogo generado: ${stats.totalRows} edificios`, 'success');
+                showToast(t('toast.catalogGenerated', { count: stats.totalRows }), 'success');
             } catch (e) {
                 console.error('Error generando Catálogo:', e);
-                showToast('Error generando Catálogo', 'error');
+                showToast(t('toast.error', { message: 'Catálogo' }), 'error');
             }
             return;
         }
     } catch (e) {
-        showToast('Error: ' + e.message, 'error');
+        showToast(t('toast.error', { message: e.message }), 'error');
         console.error(e);
     } finally {
         setLoading(false);
@@ -732,10 +763,10 @@ function downloadBlob(blob, filename) {
 
         if (chrome.runtime.lastError) {
             console.log("Download action exception:", chrome.runtime.lastError);
-            showToast("Error descarga: " + chrome.runtime.lastError.message, 'error');
+            showToast(t('toast.downloadError', { message: chrome.runtime.lastError.message }), 'error');
         } else {
             // Optional: Show success if "Save As" wasn't used
-            if (!saveAs) showToast("Archivo guardado", 'success');
+            if (!saveAs) showToast(t('toast.fileSaved'), 'success');
         }
     });
 }

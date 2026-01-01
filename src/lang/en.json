@@ -1,0 +1,100 @@
+{
+    "app": {
+        "title": "ForgeData",
+        "settings": "Settings",
+        "back": "Back"
+    },
+    "buttons": {
+        "exportJson": "Export JSON",
+        "exportJsonDesc": "MainParser + buildingData",
+        "excelEfficiency": "Efficiency Excel",
+        "excelEfficiencyDesc": "Ranking by military boosts/tile",
+        "excelCatalog": "Catalog Excel",
+        "excelCatalogDesc": "All buildings by era"
+    },
+    "settings": {
+        "downloadLocation": "Download Location",
+        "downloadDefault": "Default (Downloads)",
+        "downloadFixed": "Fixed Folder",
+        "downloadAsk": "Always Ask",
+        "privacy": "Privacy",
+        "contributeStats": "Contribute anonymous statistics",
+        "privacyHelp": "Help us improve by sending which features you use (e.g., \"Export Excel\").",
+        "neverSend": "We never send your account, city or inventory data.",
+        "language": "Language",
+        "folderPlaceholder": "Folder name"
+    },
+    "footer": {
+        "requiresGame": "Requires being in the game",
+        "by": "By"
+    },
+    "toast": {
+        "godMode": "God Mode activated!",
+        "noData": "No data found. Make sure you are in the game.",
+        "jsonExported": "JSON exported ({count} buildings)",
+        "excelGenerated": "Excel generated: {count} buildings",
+        "catalogGenerated": "Catalog generated: {count} buildings",
+        "error": "Error: {message}",
+        "fileSaved": "File saved",
+        "downloadError": "Download error: {message}"
+    },
+    "mapViewer": {
+        "title": "City Map - ForgeData",
+        "buildings": "Buildings",
+        "expansions": "Expansions",
+        "zoomIn": "Zoom +",
+        "zoomOut": "Zoom -",
+        "center": "Center",
+        "connecting": "Connecting to game...",
+        "noTab": "Game tab not found.",
+        "noData": "Data not intercepted. Reload the game."
+    },
+    "privacy": {
+        "title": "Privacy",
+        "disclaimer": "This extension does NOT collect personal, account or city data.",
+        "noAutomation": "Does NOT automate any game mechanics.",
+        "localProcessing": "Data is processed locally only to generate the Excel."
+    },
+    "errors": {
+        "dataNotFound": "Data not found. Make sure you are in your city.",
+        "cityEntitiesNotFound": "CityEntities not found."
+    },
+    "excel": {
+        "name": "Name",
+        "era": "Era",
+        "count": "Count",
+        "size": "Size",
+        "street": "Street",
+        "efficiency": "Efficiency",
+        "width": "Width",
+        "length": "Length",
+        "allAttackAttacker": "Attack in Attack",
+        "allDefenseAttacker": "Defense in Attack",
+        "allAttackDefender": "Attack in Defense",
+        "allDefenseDefender": "Defense in Defense",
+        "bgAttackAttacker": "Attack in Attack BG",
+        "bgDefenseAttacker": "Defense in Attack BG",
+        "bgAttackDefender": "Attack in Defense BG",
+        "bgDefenseDefender": "Defense in Defense BG",
+        "geAttackAttacker": "Attack in Attack GE",
+        "geDefenseAttacker": "Defense in Attack GE",
+        "geAttackDefender": "Attack in Defense GE",
+        "geDefenseDefender": "Defense in Defense GE",
+        "grAttackAttacker": "Attack in Attack QI",
+        "grDefenseAttacker": "Defense in Attack QI",
+        "grAttackDefender": "Attack in Defense QI",
+        "grDefenseDefender": "Defense in Defense QI",
+        "fullBonus": "Full Bonus",
+        "bgBonus": "BG Bonus",
+        "geBonus": "GE Bonus",
+        "qiBonus": "QI Bonus",
+        "excluded": "Excluded"
+    },
+    "languages": {
+        "en": "English",
+        "es": "Español",
+        "fr": "Français",
+        "de": "Deutsch",
+        "it": "Italiano"
+    }
+}

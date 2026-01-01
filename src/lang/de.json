@@ -1,0 +1,100 @@
+{
+    "app": {
+        "title": "ForgeData",
+        "settings": "Einstellungen",
+        "back": "Zurück"
+    },
+    "buttons": {
+        "exportJson": "JSON exportieren",
+        "exportJsonDesc": "MainParser + buildingData",
+        "excelEfficiency": "Effizienz Excel",
+        "excelEfficiencyDesc": "Ranking nach Militärboni/Feld",
+        "excelCatalog": "Katalog Excel",
+        "excelCatalogDesc": "Alle Gebäude nach Zeitalter"
+    },
+    "settings": {
+        "downloadLocation": "Download-Ordner",
+        "downloadDefault": "Standard (Downloads)",
+        "downloadFixed": "Fester Ordner",
+        "downloadAsk": "Immer fragen",
+        "privacy": "Datenschutz",
+        "contributeStats": "Anonyme Statistiken beitragen",
+        "privacyHelp": "Helfen Sie uns zu verbessern, indem Sie senden, welche Funktionen Sie nutzen (z.B.: \"Excel exportieren\").",
+        "neverSend": "Wir senden niemals Ihre Konto-, Stadt- oder Inventardaten.",
+        "language": "Sprache",
+        "folderPlaceholder": "Ordnername"
+    },
+    "footer": {
+        "requiresGame": "Erfordert im Spiel zu sein",
+        "by": "Von"
+    },
+    "toast": {
+        "godMode": "Gott-Modus aktiviert!",
+        "noData": "Keine Daten gefunden. Stellen Sie sicher, dass Sie im Spiel sind.",
+        "jsonExported": "JSON exportiert ({count} Gebäude)",
+        "excelGenerated": "Excel generiert: {count} Gebäude",
+        "catalogGenerated": "Katalog generiert: {count} Gebäude",
+        "error": "Fehler: {message}",
+        "fileSaved": "Datei gespeichert",
+        "downloadError": "Download-Fehler: {message}"
+    },
+    "mapViewer": {
+        "title": "Stadtkarte - ForgeData",
+        "buildings": "Gebäude",
+        "expansions": "Erweiterungen",
+        "zoomIn": "Zoom +",
+        "zoomOut": "Zoom -",
+        "center": "Zentrieren",
+        "connecting": "Verbindung zum Spiel...",
+        "noTab": "Spiel-Tab nicht gefunden.",
+        "noData": "Daten nicht abgefangen. Laden Sie das Spiel neu."
+    },
+    "privacy": {
+        "title": "Datenschutz",
+        "disclaimer": "Diese Erweiterung sammelt KEINE persönlichen, Konto- oder Stadtdaten.",
+        "noAutomation": "Automatisiert KEINE Spielmechanik.",
+        "localProcessing": "Daten werden nur lokal verarbeitet, um das Excel zu generieren."
+    },
+    "errors": {
+        "dataNotFound": "Daten nicht gefunden. Stellen Sie sicher, dass Sie in Ihrer Stadt sind.",
+        "cityEntitiesNotFound": "CityEntities nicht gefunden."
+    },
+    "excel": {
+        "name": "Name",
+        "era": "Zeitalter",
+        "count": "Anzahl",
+        "size": "Größe",
+        "street": "Straße",
+        "efficiency": "Effizienz",
+        "width": "Breite",
+        "length": "Länge",
+        "allAttackAttacker": "Angriff bei Angriff",
+        "allDefenseAttacker": "Verteidigung bei Angriff",
+        "allAttackDefender": "Angriff bei Verteidigung",
+        "allDefenseDefender": "Verteidigung bei Verteidigung",
+        "bgAttackAttacker": "Angriff bei Angriff SdG",
+        "bgDefenseAttacker": "Verteidigung bei Angriff SdG",
+        "bgAttackDefender": "Angriff bei Verteidigung SdG",
+        "bgDefenseDefender": "Verteidigung bei Verteidigung SdG",
+        "geAttackAttacker": "Angriff bei Angriff GE",
+        "geDefenseAttacker": "Verteidigung bei Angriff GE",
+        "geAttackDefender": "Angriff bei Verteidigung GE",
+        "geDefenseDefender": "Verteidigung bei Verteidigung GE",
+        "grAttackAttacker": "Angriff bei Angriff QE",
+        "grDefenseAttacker": "Verteidigung bei Angriff QE",
+        "grAttackDefender": "Angriff bei Verteidigung QE",
+        "grDefenseDefender": "Verteidigung bei Verteidigung QE",
+        "fullBonus": "Vollbonus",
+        "bgBonus": "SdG Bonus",
+        "geBonus": "GE Bonus",
+        "qiBonus": "QE Bonus",
+        "excluded": "Ausgeschlossen"
+    },
+    "languages": {
+        "en": "English",
+        "es": "Español",
+        "fr": "Français",
+        "de": "Deutsch",
+        "it": "Italiano"
+    }
+}

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -14,7 +14,7 @@
             <img id="logo" src="images/icon48.png" alt="ForgeData" style="height: 24px; vertical-align: middle;">
             ForgeData
         </h1>
-        <button id="btnSettings" class="settings-btn" title="Configuración">⚙️</button>
+        <button id="btnSettings" class="settings-btn" data-i18n-title="app.settings">⚙️</button>
     </header>
 
     <div class="container">
@@ -24,29 +24,31 @@
                 <button id="btnJson" class="foe-btn btn-json hidden">
                     <span class="icon">📄</span>
                     <div class="btn-text">
-                        <span>Exportar JSON</span>
-                        <span class="btn-desc">MainParser + buildingData</span>
+                        <span data-i18n="buttons.exportJson">Export JSON</span>
+                        <span class="btn-desc" data-i18n="buttons.exportJsonDesc">MainParser + buildingData</span>
                     </div>
                 </button>
                 <button id="btnEfficiency" class="foe-btn btn-efficiency">
                     <span class="icon">📊</span>
                     <div class="btn-text">
-                        <span>Excel Eficiencia</span>
-                        <span class="btn-desc">Ranking por boosts militares/cuadro</span>
+                        <span data-i18n="buttons.excelEfficiency">Efficiency Excel</span>
+                        <span class="btn-desc" data-i18n="buttons.excelEfficiencyDesc">Ranking by military
+                            boosts/tile</span>
                     </div>
                 </button>
                 <button id="btnCatalog" class="foe-btn btn-catalog">
                     <span class="icon">📚</span>
                     <div class="btn-text">
-                        <span>Excel Catálogo</span>
-                        <span class="btn-desc">Todos los edificios por era</span>
+                        <span data-i18n="buttons.excelCatalog">Catalog Excel</span>
+                        <span class="btn-desc" data-i18n="buttons.excelCatalogDesc">All buildings by era</span>
                     </div>
                 </button>
             </div>
 
             <div class="footer">
-                Requiere estar en el juego<br>
-                Por <strong>onosenday</strong> · <a href="mailto:onosenday@gmail.com">onosenday@gmail.com</a>
+                <span data-i18n="footer.requiresGame">Requires being in the game</span><br>
+                <span data-i18n="footer.by">By</span> <strong>onosenday</strong> · <a
+                    href="mailto:onosenday@gmail.com">onosenday@gmail.com</a>
             </div>
         </div>
 
@@ -54,46 +56,57 @@
         <div id="settings-view" class="view-section">
             <div class="settings-panel">
                 <div class="settings-group">
-                    <span class="settings-label">Ubicación de Descarga</span>
+                    <span class="settings-label" data-i18n="settings.downloadLocation">Download Location</span>
                     <div class="radio-group">
                         <label class="radio-label">
                             <input type="radio" name="downloadMode" value="default" checked>
-                            Predeterminado (Descargas)
+                            <span data-i18n="settings.downloadDefault">Default (Downloads)</span>
                         </label>
                         <label class="radio-label">
                             <input type="radio" name="downloadMode" value="subfolder">
-                            Carpeta Fija
+                            <span data-i18n="settings.downloadFixed">Fixed Folder</span>
                         </label>
                         <input type="text" id="inputSubfolder" class="input-subfolder" value="FoE_Data"
-                            placeholder="Nombre de carpeta">
+                            data-i18n-placeholder="settings.folderPlaceholder">
                         <label class="radio-label">
                             <input type="radio" name="downloadMode" value="ask">
-                            Preguntar siempre
+                            <span data-i18n="settings.downloadAsk">Always Ask</span>
                         </label>
                     </div>
                 </div>
 
                 <div class="settings-group">
-                    <label class="settings-label">Privacidad</label>
+                    <span class="settings-label" data-i18n="settings.language">Language</span>
+                    <select id="selectLanguage" class="input-subfolder" style="width: 100%; margin-top: 8px;">
+                        <!-- Options populated dynamically by i18n -->
+                    </select>
+                </div>
+
+                <div class="settings-group">
+                    <label class="settings-label" data-i18n="settings.privacy">Privacy</label>
                     <label class="radio-label">
                         <input type="checkbox" id="checkAnalytics" checked>
-                        Contribuir con estadísticas anónimas
+                        <span data-i18n="settings.contributeStats">Contribute anonymous statistics</span>
                     </label>
                     <p class="btn-desc" style="margin-left: 24px; color: var(--foe-text-muted);">
-                        Ayúdanos a mejorar enviando qué funciones utilizas (ej: "Exportar Excel").<br>
-                        <strong>Nunca</strong> enviamos datos de tu cuenta, ciudad o inventario.
+                        <span data-i18n="settings.privacyHelp">Help us improve by sending which features you
+                            use.</span><br>
+                        <strong data-i18n="settings.neverSend">We never send your account, city or inventory
+                            data.</strong>
                     </p>
                 </div>
 
                 <div class="disclaimer">
-                    <span class="settings-label">Privacidad</span>
-                    Esta extensión <strong>NO</strong> recopila datos personales, de la cuenta ni de la ciudad.<br>
-                    <strong>NO</strong> automatiza ninguna mecánica del juego.<br>
-                    Los datos se procesan localmente solo para generar el Excel.
+                    <span class="settings-label" data-i18n="privacy.title">Privacy</span>
+                    <span data-i18n="privacy.disclaimer">This extension does NOT collect personal, account or city
+                        data.</span><br>
+                    <span data-i18n="privacy.noAutomation">Does NOT automate any game mechanics.</span><br>
+                    <span data-i18n="privacy.localProcessing">Data is processed locally only to generate the
+                        Excel.</span>
                 </div>
             </div>
 
-            <button id="btnBack" class="foe-btn back-btn">Volver</button>
+            <button id="btnBack" class="foe-btn back-btn" data-i18n="app.back">Back</button>
         </div>
     </div>
 
@@ -101,7 +114,7 @@
 
     <div id="loading-overlay">
         <div class="spinner"></div>
-        <div class="loading-text">Procesando...</div>
+        <div class="loading-text">Processing...</div>
     </div>
 
     <script src="lib/xlsx.mini.min.js"></script>

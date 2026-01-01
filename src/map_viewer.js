@@ -2,6 +2,8 @@
  * Map Viewer for ForgeData
  */
 
+import { i18n, t } from './i18n.js';
+
 const canvas = document.getElementById('mapCanvas');
 const ctx = canvas.getContext('2d');
 const container = document.getElementById('canvas-container');
@@ -17,6 +19,9 @@ let startX, startY;
 const MAX_GRID_SIZE = 120; // safe margin
 
 document.addEventListener('DOMContentLoaded', async () => {
+    // Initialize i18n
+    await i18n.init();
+
     initCanvas();
     await loadData();
 });
@@ -67,7 +72,7 @@ async function loadData() {
     try {
         const tabs = await chrome.tabs.query({ url: "*://*.forgeofempires.com/game/*" });
         if (tabs.length === 0) {
-            throw new Error("No se encontró la pestaña del juego abierta.");
+            throw new Error(t('mapViewer.noTab'));
         }
 
         const tab = tabs[0];
@@ -88,7 +93,7 @@ async function loadData() {
 
         const result = results[0].result;
         if (!result) {
-            throw new Error("Datos no interceptados. Recarga el juego.");
+            throw new Error(t('mapViewer.noData'));
         }
 
         cityData = result;
@@ -98,7 +103,7 @@ async function loadData() {
         centerMap();
 
     } catch (e) {
-        document.getElementById('loading-text').textContent = "Error: " + e.message;
+        document.getElementById('loading-text').textContent = t('toast.error', { message: e.message });
         console.error(e);
     }
 }

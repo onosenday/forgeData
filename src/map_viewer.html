@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>Mapa de Ciudad - ForgeData</title>
+    <title data-i18n="mapViewer.title">City Map - ForgeData</title>
     <style>
         body {
             font-family: sans-serif;
@@ -124,11 +124,11 @@
         <div id="stats">
             <div class="stat-box">
                 <div class="stat-value" id="stat-buildings">0</div>
-                <div class="stat-label">Edificios</div>
+                <div class="stat-label" data-i18n="mapViewer.buildings">Buildings</div>
             </div>
             <div class="stat-box">
                 <div class="stat-value" id="stat-expansion">0</div>
-                <div class="stat-label">Expansiones</div>
+                <div class="stat-label" data-i18n="mapViewer.expansions">Expansions</div>
             </div>
         </div>
         <div id="building-list"></div>
@@ -136,9 +136,9 @@
 
     <div id="main">
         <div id="toolbar">
-            <button id="btnZoomIn">Zoom +</button>
-            <button id="btnZoomOut">Zoom -</button>
-            <button id="btnCenter">Centrar</button>
+            <button id="btnZoomIn" data-i18n="mapViewer.zoomIn">Zoom +</button>
+            <button id="btnZoomOut" data-i18n="mapViewer.zoomOut">Zoom -</button>
+            <button id="btnCenter" data-i18n="mapViewer.center">Center</button>
             <span id="coords" style="margin-left: auto; align-self: center; color: #888;">0, 0</span>
         </div>
         <div id="canvas-container">
@@ -146,11 +146,11 @@
         </div>
         <div id="loading">
             <div class="spinner"></div>
-            <div id="loading-text">Conectando con el juego...</div>
+            <div id="loading-text" data-i18n="mapViewer.connecting">Connecting to game...</div>
         </div>
     </div>
 
-    <script src="map_viewer.js"></script>
+    <script src="map_viewer.js" type="module"></script>
 </body>
 
 </html>

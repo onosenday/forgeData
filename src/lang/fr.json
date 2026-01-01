@@ -1,0 +1,100 @@
+{
+    "app": {
+        "title": "ForgeData",
+        "settings": "Paramètres",
+        "back": "Retour"
+    },
+    "buttons": {
+        "exportJson": "Exporter JSON",
+        "exportJsonDesc": "MainParser + buildingData",
+        "excelEfficiency": "Excel Efficacité",
+        "excelEfficiencyDesc": "Classement par bonus militaires/case",
+        "excelCatalog": "Excel Catalogue",
+        "excelCatalogDesc": "Tous les bâtiments par ère"
+    },
+    "settings": {
+        "downloadLocation": "Emplacement de Téléchargement",
+        "downloadDefault": "Par défaut (Téléchargements)",
+        "downloadFixed": "Dossier Fixe",
+        "downloadAsk": "Toujours demander",
+        "privacy": "Confidentialité",
+        "contributeStats": "Contribuer avec des statistiques anonymes",
+        "privacyHelp": "Aidez-nous à nous améliorer en envoyant quelles fonctionnalités vous utilisez (ex: \"Exporter Excel\").",
+        "neverSend": "Nous n'envoyons jamais les données de votre compte, ville ou inventaire.",
+        "language": "Langue",
+        "folderPlaceholder": "Nom du dossier"
+    },
+    "footer": {
+        "requiresGame": "Nécessite d'être dans le jeu",
+        "by": "Par"
+    },
+    "toast": {
+        "godMode": "Mode Dieu activé !",
+        "noData": "Aucune donnée trouvée. Assurez-vous d'être dans le jeu.",
+        "jsonExported": "JSON exporté ({count} bâtiments)",
+        "excelGenerated": "Excel généré : {count} bâtiments",
+        "catalogGenerated": "Catalogue généré : {count} bâtiments",
+        "error": "Erreur : {message}",
+        "fileSaved": "Fichier enregistré",
+        "downloadError": "Erreur téléchargement : {message}"
+    },
+    "mapViewer": {
+        "title": "Carte de Ville - ForgeData",
+        "buildings": "Bâtiments",
+        "expansions": "Expansions",
+        "zoomIn": "Zoom +",
+        "zoomOut": "Zoom -",
+        "center": "Centrer",
+        "connecting": "Connexion au jeu...",
+        "noTab": "Onglet du jeu non trouvé.",
+        "noData": "Données non interceptées. Rechargez le jeu."
+    },
+    "privacy": {
+        "title": "Confidentialité",
+        "disclaimer": "Cette extension ne collecte PAS de données personnelles, de compte ou de ville.",
+        "noAutomation": "N'automatise AUCUNE mécanique du jeu.",
+        "localProcessing": "Les données sont traitées localement uniquement pour générer l'Excel."
+    },
+    "errors": {
+        "dataNotFound": "Données non trouvées. Assurez-vous d'être dans votre ville.",
+        "cityEntitiesNotFound": "CityEntities non trouvé."
+    },
+    "excel": {
+        "name": "Nom",
+        "era": "Ère",
+        "count": "Quantité",
+        "size": "Taille",
+        "street": "Rue",
+        "efficiency": "Efficacité",
+        "width": "Largeur",
+        "length": "Longueur",
+        "allAttackAttacker": "Attaque en Attaque",
+        "allDefenseAttacker": "Défense en Attaque",
+        "allAttackDefender": "Attaque en Défense",
+        "allDefenseDefender": "Défense en Défense",
+        "bgAttackAttacker": "Attaque en Attaque CdG",
+        "bgDefenseAttacker": "Défense en Attaque CdG",
+        "bgAttackDefender": "Attaque en Défense CdG",
+        "bgDefenseDefender": "Défense en Défense CdG",
+        "geAttackAttacker": "Attaque en Attaque Expé",
+        "geDefenseAttacker": "Défense en Attaque Expé",
+        "geAttackDefender": "Attaque en Défense Expé",
+        "geDefenseDefender": "Défense en Défense Expé",
+        "grAttackAttacker": "Attaque en Attaque IQ",
+        "grDefenseAttacker": "Défense en Attaque IQ",
+        "grAttackDefender": "Attaque en Défense IQ",
+        "grDefenseDefender": "Défense en Défense IQ",
+        "fullBonus": "Bonus Complet",
+        "bgBonus": "Bonus CdG",
+        "geBonus": "Bonus Expé",
+        "qiBonus": "Bonus IQ",
+        "excluded": "Exclus"
+    },
+    "languages": {
+        "en": "English",
+        "es": "Español",
+        "fr": "Français",
+        "de": "Deutsch",
+        "it": "Italiano"
+    }
+}

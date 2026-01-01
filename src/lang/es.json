@@ -2,7 +2,8 @@
     "app": {
         "title": "ForgeData",
         "settings": "Configuración",
-        "back": "Volver"
+        "back": "Volver",
+        "version": "Versión"
     },
     "buttons": {
         "exportJson": "Exportar JSON",

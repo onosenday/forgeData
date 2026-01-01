@@ -16,6 +16,11 @@ document.addEventListener('DOMContentLoaded', async function () {
     // Populate language selector
     populateLanguageSelector();
 
+    // Display version
+    const manifest = chrome.runtime.getManifest();
+    const versionEl = document.getElementById('appVersion');
+    if (versionEl) versionEl.textContent = manifest.version;
+
     // Initialize Analytics
     analytics.init().then(() => {
         analytics.track('view_popup');

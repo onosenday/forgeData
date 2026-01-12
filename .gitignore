@@ -16,3 +16,9 @@ forge_data_v1.2.zip
 forge_data_local.zip
 forge_data_v1.2.1.zip
 foe_catalog_2025-12-27.xlsx
+
+# Development files
+lib/icons/
+*.py
+*_check.xlsx
+forge_data_v1.2.3.zip

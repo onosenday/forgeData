@@ -12,7 +12,7 @@ The goal is to help you make strategic decisions based on real efficiency data f
 
 ![Screenshot](store_screenshot.png)
 
-### ✨ New in v1.2.2
+### ✨ New in v1.2.3
 - **Multilanguage Support**: The extension now supports 5 languages (English, Spanish, French, German, Italian)
 - **Auto-detection**: Automatically detects your browser's language
 - **Language Selector**: Choose your preferred language in Settings
@@ -81,7 +81,7 @@ El objetivo es ayudarte a tomar decisiones estratégicas basadas en datos reales
 
 ![Captura de pantalla](store_screenshot.png)
 
-### ✨ Nuevo en v1.2.2
+### ✨ Nuevo en v1.2.3
 - **Soporte Multilenguaje**: La extensión ahora soporta 5 idiomas (Inglés, Español, Francés, Alemán, Italiano)
 - **Auto-detección**: Detecta automáticamente el idioma de tu navegador
 - **Selector de Idioma**: Elige tu idioma preferido en Configuración
@@ -143,3 +143,12 @@ En el menú de ajustes de la extensión puedes configurar:
 ---
 
 **Note / Nota:** This extension is not affiliated with or endorsed by InnoGames. It is a tool created by fans for fans. / Esta extensión no está afiliada ni respaldada por InnoGames. Es una herramienta creada por fans para fans.
+### ✨ New in v1.2.3
+- **Visual Icons in Excel**: Headers now include icons for FP, Goods, and all efficiency modes
+- **Enhanced Efficiency Display**: Mode-specific icons (Global, BG, GE, QI) for better readability
+- Bug fixes and performance improvements
+
+### ✨ Nuevo en v1.2.3
+- **Iconos visuales en Excel**: Las cabeceras ahora incluyen iconos para FP, Bienes y todos los modos de eficiencia
+- **Visualización de eficiencia mejorada**: Iconos específicos por modo (Global, CdB, Expe, IC) para mejor legibilidad
+- Corrección de errores y mejoras de rendimiento

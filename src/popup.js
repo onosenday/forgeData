@@ -288,6 +288,54 @@ async function exportData(type) {
                     return parts.length > 1 ? parts[1] : 'AllAge';
                 }
 
+                // Extraer recursos (FPs, Bienes)
+                function extractResources(catalogEntry, eraName) {
+                    const resources = { fps: 0, goods: 0 };
+                    const components = catalogEntry.components || {};
+
+                    // Helper interno para procesar un objeto de recursos
+                    const processResources = (r) => {
+                        if (!r) return;
+                        if (r.strategy_points) resources.fps += r.strategy_points;
+                        if (r.all_goods_of_age) resources.goods += r.all_goods_of_age;
+
+                        for (const k in r) {
+                            if (k !== 'strategy_points' && k !== 'all_goods_of_age' && k !== 'money' && k !== 'supplies' && k !== 'medals' && k !== 'premium') {
+                                if (typeof r[k] === 'number') resources.goods += r[k];
+                            }
+                        }
+                    };
+
+                    // Helper interno
+                    const checkOptions = (opts) => {
+                        if (!opts || !Array.isArray(opts)) return;
+                        // Priorizar producción de 24h (86400s) o usar la primera
+                        const opt = opts.find(o => o.time === 86400) || opts[0];
+
+                        // Caso 1: opt.product (objeto)
+                        if (opt?.product?.resources) {
+                            processResources(opt.product.resources);
+                        }
+
+                        // Caso 2: opt.products (array) - Común en MultiAge / Eventos recientes
+                        if (opt?.products && Array.isArray(opt.products)) {
+                            for (const p of opt.products) {
+                                // Puede estar en p.resources o p.playerResources.resources
+                                if (p.resources) processResources(p.resources);
+                                if (p.playerResources?.resources) processResources(p.playerResources.resources);
+                            }
+                        }
+                    };
+
+                    // Buscar en Era específica, AllAge y Raíz
+                    const paths = [components[eraName], components['AllAge'], components];
+                    for (const p of paths) {
+                        if (p?.production?.options) checkOptions(p.production.options);
+                    }
+
+                    return resources;
+                }
+
                 // Extraer boosts de una entidad, buscando en múltiples ubicaciones
                 function extractBoosts(catalogEntry, playerEntity, eraName) {
                     const boosts = {};
@@ -341,12 +389,35 @@ async function exportData(type) {
                 // ============================================
 
                 if (exportType === 'json') {
-                    const data = safeClone({
-                        MainParser: FoEDataParser,
-                        buildingData: window.buildingData || null,
-                        exportDate: new Date().toISOString()
-                    });
-                    return { type: 'json', data: data, filename: `foe_data_${timestamp}.json` };
+                    // Intento robusto de clonación
+                    function robustClone(obj) {
+                        try {
+                            return JSON.parse(JSON.stringify(obj));
+                        } catch (e) {
+                            // Si falla por ciclo, fallback destructivo pero seguro
+                            const cache = new Set();
+                            return JSON.parse(JSON.stringify(obj, (key, value) => {
+                                if (typeof value === 'object' && value !== null) {
+                                    if (cache.has(value)) return;
+                                    cache.add(value);
+                                }
+                                return value;
+                            }));
+                        }
+                    }
+
+                    try {
+                        const rawData = {
+                            MainParser: FoEDataParser,
+                            buildingData: window.buildingData || null,
+                            exportDate: new Date().toISOString()
+                        };
+
+                        const data = robustClone(rawData);
+                        return { type: 'json', data: data, filename: `foe_data_${timestamp}.json` };
+                    } catch (e) {
+                        return { type: 'error', message: 'Error exportando JSON: ' + e.message };
+                    }
                 }
 
                 // ============================================
@@ -366,7 +437,12 @@ async function exportData(type) {
 
                     const colNames = {
                         'name': 'Nombre', 'eraName': 'Era', 'count': 'Cantidad',
+                        'name': 'Nombre', 'eraName': 'Era', 'count': 'Cantidad',
                         'size_total': 'Tamaño', 'needStreet': 'Calle',
+                        'fps': 'FPS', 'goods': 'Bienes',
+                        'eff_fps': 'Eficiencia FP', 'eff_goods': 'Eficiencia Bienes',
+                        'eff_cdb': 'Eficiencia CdB', 'eff_ic': 'Eficiencia IC', 'eff_expe': 'Eficiencia Expe',
+                        'eff_global_cdb': 'Eficiencia Global + CdB', 'eff_global_ic': 'Eficiencia Global + IC', 'eff_global_expe': 'Eficiencia Global + Expe',
                         'all-att_boost_attacker': 'Ataque en Ataque',
                         'all-def_boost_attacker': 'Defensa en Ataque',
                         'all-att_boost_defender': 'Ataque en Defensa',
@@ -399,7 +475,8 @@ async function exportData(type) {
 
                         const { width, length } = extractSize(catalogEntry);
                         const boosts = extractBoosts(catalogEntry, playerEntity, townHallEra);
-                        const streetLevel = catalogEntry.requirements?.street_connection_level || 0;
+                        const resources = extractResources(catalogEntry, townHallEra);
+                        const streetLevel = catalogEntry.requirements?.street_connection_level || catalogEntry.components?.AllAge?.streetConnectionRequirement?.requiredLevel || 0;
 
                         buildings.push({
                             name: catalogEntry.name || entityId,
@@ -408,7 +485,8 @@ async function exportData(type) {
                             size_total: width * length,
                             streetLevel: streetLevel,
                             needStreet: needStreetAsText(streetLevel),
-                            ...boosts
+                            ...boosts,
+                            ...resources
                         });
                     }
 
@@ -432,24 +510,68 @@ async function exportData(type) {
                     const icCols = ['guild_raids-att_boost_attacker', 'guild_raids-def_boost_attacker', 'guild_raids-att_boost_defender', 'guild_raids-def_boost_defender'];
                     const allCols = [...allBoostCols, ...cdbCols, ...expeCols, ...icCols];
 
-                    function calcEfficiency(item, cols) {
-                        let sum = 0;
-                        for (const c of cols) sum += item[c] || 0;
-                        // Cálculo de eficiencia: Tamaño + Nivel de Calle
-                        const adjustedSize = item.size_total + (item.streetLevel || 0);
-                        const efficiency = adjustedSize > 0 ? sum / adjustedSize : 0;
-                        // Formato español: 2 decimales con coma
-                        return parseFloat(efficiency.toFixed(2));
+                    function calcEfficiency(val, size) {
+                        const eff = size > 0 ? val / size : 0;
+                        return parseFloat(eff.toFixed(2));
                     }
 
-                    function createSheet(items, boostCols) {
-                        const filtered = items.filter(item => boostCols.some(c => (item[c] || 0) !== 0));
-                        for (const item of filtered) {
-                            item.Eficiencia = calcEfficiency(item, boostCols);
-                        }
+                    function sumBoosts(item, cols) {
+                        let sum = 0;
+                        for (const c of cols) sum += item[c] || 0;
+                        return sum;
+                    }
+
+                    function createSheet(items, boostCols, mode = 'normal') {
+                        // Filtrar items irrelevantes? No, mostrar todo lo que tenga valor
+                        // Ojo: boostCols define qué columnas mostrar, pero la eficiencia puede ser compuesta
+
+                        const processed = items.map(item => {
+                            // Copia superficial
+                            const newItem = { ...item };
+                            const size = newItem.size_total + (newItem.streetLevel || 0);
+
+                            // 1. Eficiencia Standard (basada en boostCols passados)
+                            const boostSum = sumBoosts(newItem, boostCols);
+                            newItem.Eficiencia = calcEfficiency(boostSum, size);
+
+                            // 2. Eficiencias de Recursos
+                            newItem.eff_fps = calcEfficiency(newItem.fps, size);
+                            newItem.eff_goods = calcEfficiency(newItem.goods, size);
+
+                            // 3. Eficiencias Modos Específicos (CdB, IC, Expe)
+                            // Definimos grupos fijos para estas columnas extras
+                            const cdbSum = sumBoosts(newItem, cdbCols);
+                            const icSum = sumBoosts(newItem, icCols);
+                            const expeSum = sumBoosts(newItem, expeCols);
+                            const normalSum = sumBoosts(newItem, allBoostCols); // 'allBoostCols' son los base (A/D A/D)
+
+                            newItem.eff_cdb = calcEfficiency(cdbSum, size);
+                            newItem.eff_ic = calcEfficiency(icSum, size);
+                            newItem.eff_expe = calcEfficiency(expeSum, size);
+
+                            // 4. Eficiencias Combinadas (Global + Modo)
+                            newItem.eff_global_cdb = calcEfficiency(normalSum + cdbSum, size);
+                            newItem.eff_global_ic = calcEfficiency(normalSum + icSum, size);
+                            newItem.eff_global_expe = calcEfficiency(normalSum + expeSum, size);
+
+                            return newItem;
+                        });
+
+                        // Filtrar: si tiene boost, o FPs, o Goods
+                        const filtered = processed.filter(item => {
+                            const hasBoost = boostCols.some(c => (item[c] || 0) !== 0);
+                            const hasRes = item.fps > 0 || item.goods > 0;
+                            return hasBoost || hasRes;
+                        });
+
                         filtered.sort((a, b) => b.Eficiencia - a.Eficiencia);
 
-                        const outCols = ['name', 'eraName', 'count', 'size_total', 'needStreet', ...boostCols, 'Eficiencia'];
+                        // Nuevas columnas fijas a la izquierda
+                        const fixedColsLeft = ['name', 'eraName', 'count', 'size_total', 'needStreet', 'fps', 'goods'];
+                        // Nuevas columnas de eficiencia a la derecha (opcional, o junto a la eficiencia ppal)
+                        const effCols = ['Eficiencia', 'eff_cdb', 'eff_ic', 'eff_expe', 'eff_global_cdb', 'eff_global_ic', 'eff_global_expe', 'eff_fps', 'eff_goods'];
+
+                        const outCols = [...fixedColsLeft, ...boostCols, ...effCols];
                         const header = outCols.map(c => colNames[c] || c);
                         const rows = [header];
                         for (const item of filtered) {
@@ -517,6 +639,12 @@ async function exportData(type) {
                         'guild_raids_att_boost_attacker', 'guild_raids_att_boost_defender',
                         'guild_raids_def_boost_attacker', 'guild_raids_def_boost_defender'
                     ];
+
+                    // Grupos de columnas para cálculos
+                    const colsNormal = ['all_att_boost_attacker', 'all_att_boost_defender', 'all_def_boost_attacker', 'all_def_boost_defender'];
+                    const colsCdB = ['battleground_att_boost_attacker', 'battleground_att_boost_defender', 'battleground_def_boost_attacker', 'battleground_def_boost_defender'];
+                    const colsExpe = ['guild_expedition_att_boost_attacker', 'guild_expedition_att_boost_defender', 'guild_expedition_def_boost_attacker', 'guild_expedition_def_boost_defender'];
+                    const colsIC = ['guild_raids_att_boost_attacker', 'guild_raids_att_boost_defender', 'guild_raids_def_boost_attacker', 'guild_raids_def_boost_defender'];
 
                     // Todas las columnas a exportar (militares + recursos IC)
                     const allExportCols = [
@@ -604,25 +732,37 @@ async function exportData(type) {
                         for (const entityId in catalog) {
                             const entry = catalog[entityId];
                             const { width, length } = extractSize(entry);
-                            const streetLevel = entry.requirements?.street_connection_level || 0;
+                            const streetLevel = entry.requirements?.street_connection_level || entry.components?.AllAge?.streetConnectionRequirement?.requiredLevel || 0;
                             const rawBoosts = getCatalogBoosts(entry, era);
+                            const resources = extractResources(entry, era);
 
                             // Filtrar y procesar boosts
                             const boosts = {};
                             let hasRelevantBoost = false;
-                            let totalEfficiencyBoost = 0;
+
+                            // Acumuladores
+                            let sumNormal = 0;
+                            let sumCdB = 0;
+                            let sumExpe = 0;
+                            let sumIC = 0;
+                            let sumTotal = 0;
 
                             for (const key in rawBoosts) {
                                 if (allowedBoostsSet.has(key)) {
                                     boosts[key] = rawBoosts[key];
                                     hasRelevantBoost = true;
 
-                                    // Sumar a eficiencia solo si es militar
-                                    if (efficiencyBoostsSet.has(key)) {
-                                        totalEfficiencyBoost += rawBoosts[key];
-                                    }
+                                    const val = rawBoosts[key];
+                                    if (colsNormal.includes(key)) sumNormal += val;
+                                    if (colsCdB.includes(key)) sumCdB += val;
+                                    if (colsExpe.includes(key)) sumExpe += val;
+                                    if (colsIC.includes(key)) sumIC += val;
+                                    if (efficiencyBoostsSet.has(key)) sumTotal += val;
                                 }
                             }
+
+                            // Verificar si tiene recursos relevantes
+                            if (resources.fps > 0 || resources.goods > 0) hasRelevantBoost = true;
 
                             // Solo incluir edificios que tengan algún boost RELEVANTE
                             if (!hasRelevantBoost) continue;
@@ -630,9 +770,27 @@ async function exportData(type) {
                             // Registrar columnas de boost presentes
                             for (const k in boosts) allBoostCols.add(k);
 
-                            // Calcular eficiencia (solo militares)
+                            // Calcular eficiencias
+                            // Ajuste de tamaño
                             const adjustedSize = (width * length) + streetLevel;
-                            const efficiency = adjustedSize > 0 ? Math.round((totalEfficiencyBoost / adjustedSize) * 100) / 100 : 0;
+
+                            const calcEff = (val) => adjustedSize > 0 ? parseFloat((val / adjustedSize).toFixed(2)) : 0;
+
+                            const efficiency = calcEff(sumTotal); // Eficiencia "Clásica" (Suma de todo lo militar)
+
+                            // Eficiencias por Recurso
+                            const eff_fps = calcEff(resources.fps);
+                            const eff_goods = calcEff(resources.goods);
+
+                            // Eficiencias por Modo
+                            const eff_cdb = calcEff(sumCdB);
+                            const eff_ic = calcEff(sumIC);
+                            const eff_expe = calcEff(sumExpe);
+
+                            // Eficiencias Combinadas (Normal + Modo)
+                            const eff_global_cdb = calcEff(sumNormal + sumCdB);
+                            const eff_global_ic = calcEff(sumNormal + sumIC);
+                            const eff_global_expe = calcEff(sumNormal + sumExpe);
 
                             rows.push({
                                 Nombre: entry.name || entityId,
@@ -641,6 +799,16 @@ async function exportData(type) {
                                 Largo: length,
                                 Tamaño: width * length,
                                 Calle: streetLevel,
+                                FPS: resources.fps,
+                                Bienes: resources.goods,
+                                'Eficiencia FP': eff_fps,
+                                'Eficiencia Bienes': eff_goods,
+                                'Eficiencia CdB': eff_cdb,
+                                'Eficiencia IC': eff_ic,
+                                'Eficiencia Expe': eff_expe,
+                                'Global + CdB': eff_global_cdb,
+                                'Global + IC': eff_global_ic,
+                                'Global + Expe': eff_global_expe,
                                 ...boosts
                             });
                         }
@@ -653,7 +821,9 @@ async function exportData(type) {
                         // Ordenar columnas según preferencia
                         const currentEraBoostCols = allExportCols.filter(c => allBoostCols.has(c));
 
-                        const finalCols = ['Nombre', 'Eficiencia', ...currentEraBoostCols, 'Ancho', 'Largo', 'Tamaño', 'Calle'];
+                        const newCols = ['FPS', 'Bienes', 'Eficiencia CdB', 'Eficiencia IC', 'Eficiencia Expe', 'Global + CdB', 'Global + IC', 'Global + Expe', 'Eficiencia FP', 'Eficiencia Bienes'];
+
+                        const finalCols = ['Nombre', 'Eficiencia', ...newCols, ...currentEraBoostCols, 'Ancho', 'Largo', 'Tamaño', 'Calle'];
 
                         // Crear filas para Excel
                         const sheetRows = [finalCols];
@@ -777,15 +947,42 @@ function downloadBlob(blob, filename) {
 }
 
 // Función para generar Excel con iconos usando ExcelJS
+// Función para generar Excel con iconos usando ExcelJS
 async function generateExcelWithIcons(sheets, filename) {
+    console.log('Iniciando generateExcelWithIcons...');
     const workbook = new ExcelJS.Workbook();
     workbook.creator = 'onosenday';
     workbook.lastModifiedBy = 'onosenday';
     workbook.created = new Date();
     workbook.modified = new Date();
 
+    // Cache de imagenes añadidas al workbook para evitar duplicados
+    // Key: iconKey, Value: imageId
+    const imageCache = new Map();
+
     // Mapa de traducción inversa: Nombre Traducido -> Clave de Icono (original)
     const translationMap = {
+        // Recursos Básicos
+        'Calle': 'street',
+        'FPS': 'forge_points',
+        'Bienes': 'goods',
+
+        // Eficiencias Generales
+        'Eficiencia': 'efficiency',
+        'Eficiencia FP': 'efficiency_fp',
+        'Eficiencia Bienes': 'efficiency_goods',
+
+        // Eficiencias Específicas
+        'Eficiencia CdB': 'efficiency_gbg',
+        'Eficiencia Expe': 'efficiency_ge',
+        'Eficiencia IC': 'efficiency_qi',
+
+        // Eficiencias Globales
+        'Eficiencia Global + CdB': 'efficiency_global_gbg',
+        'Eficiencia Global + Expe': 'efficiency_global_ge',
+        'Eficiencia Global + IC': 'efficiency_global_qi',
+
+        // Boosts
         'Ataque en Ataque': 'all_att_boost_attacker',
         'Defensa en Ataque': 'all_def_boost_attacker',
         'Ataque en Defensa': 'all_att_boost_defender',
@@ -815,6 +1012,7 @@ async function generateExcelWithIcons(sheets, filename) {
 
     // Procesar cada hoja
     for (const sheetName in sheets) {
+        console.log(`Procesando hoja: ${sheetName}`);
         const sheetData = sheets[sheetName];
         if (!sheetData || sheetData.length === 0) continue;
 
@@ -823,6 +1021,13 @@ async function generateExcelWithIcons(sheets, filename) {
 
         // Añadir headers con estilo
         const headerRow = worksheet.addRow(headers);
+
+        // Activar AutoFilter
+        const lastColLetter = worksheet.getColumn(headers.length).letter;
+        worksheet.autoFilter = `A1:${lastColLetter}1`;
+
+        // Fijar primera fila y primera columna
+        worksheet.views = [{ state: 'frozen', xSplit: 1, ySplit: 1 }];
 
         // Configurar altura de la fila de header
         headerRow.height = 40;
@@ -849,28 +1054,47 @@ async function generateExcelWithIcons(sheets, filename) {
                 iconKey = header.replace(/-/g, '_');
             }
 
-            if (typeof BOOST_ICONS !== 'undefined' && BOOST_ICONS[iconKey]) {
+            // Usar window.BOOST_ICONS explícitamente porque estamos en un módulo
+            if (typeof window.BOOST_ICONS !== 'undefined' && window.BOOST_ICONS[iconKey]) {
                 try {
-                    // Extraer base64 sin el prefijo data:image/png;base64,
-                    const base64Data = BOOST_ICONS[iconKey].split(',')[1];
+                    let imageIdNum;
 
-                    const imageIdNum = workbook.addImage({
-                        base64: base64Data,
-                        extension: 'png',
-                    });
+                    // Optimización: Reusar imagen si ya fue añadida al workbook
+                    if (imageCache.has(iconKey)) {
+                        imageIdNum = imageCache.get(iconKey);
+                    } else {
+                        // Extraer base64 sin el prefijo data:image/png;base64,
+                        const parts = window.BOOST_ICONS[iconKey].split(',');
+                        let base64Data = parts.length > 1 ? parts[1] : parts[0];
+
+                        // Sanitize: remove whitespace/newlines just in case
+                        base64Data = base64Data.trim();
+
+                        imageIdNum = workbook.addImage({
+                            base64: base64Data,
+                            extension: 'png',
+                        });
+                        imageCache.set(iconKey, imageIdNum);
+                    }
 
                     // Añadir imagen centrada en la celda
                     worksheet.addImage(imageIdNum, {
-                        tl: { col: colIdx + 0.1, row: 0.1 },
-                        ext: { width: 32, height: 32 },
+                        tl: { col: colIdx + 0.15, row: 0.15 }, // Ajuste fino para centrar mejor
+                        ext: { width: 28, height: 28 },         // Tamaño ligeramente menor para margen
                         editAs: 'oneCell'
                     });
 
-                    // Limpiar el texto del header y ajustar ancho
-                    worksheet.getCell(1, colIdx + 1).value = '';
+                    // Limpiar el texto del header pero añadir NOTA (Tooltip)
+                    // Excel no permite tooltips nativos en imagenes sin que sean links (que añaden texto de ayuda no deseado)
+                    // Usamos Cell Note (comentario) como fallback standard.
+                    const cell = worksheet.getCell(1, colIdx + 1);
+                    cell.value = '';
+                    cell.note = header; // Tooltip con el nombre original de la columna
+
+                    // Ajustar ancho de columna para acomodar el icono
                     worksheet.getColumn(colIdx + 1).width = 6;
                 } catch (e) {
-                    // console.log('Error añadiendo icono:', iconKey, e);
+                    console.error('Error añadiendo icono:', iconKey, e);
                 }
             }
         }
@@ -887,10 +1111,18 @@ async function generateExcelWithIcons(sheets, filename) {
         }
     }
 
-    // Generar y descargar
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    downloadBlob(blob, filename);
+    console.log('Generando buffer Excel...');
+    try {
+        // Generar y descargar
+        const buffer = await workbook.xlsx.writeBuffer();
+        console.log('Buffer generado. Iniciando descarga...');
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        downloadBlob(blob, filename);
+        console.log('Descarga iniciada.');
+    } catch (err) {
+        console.error('Error fatal escribiendo buffer o descargando:', err);
+        throw err; // Re-throw para que el caller capture y quite el loading
+    }
 
     let total = 0;
     for (const s in sheets) total += sheets[s].length - 1;

@@ -56,9 +56,13 @@
         "noAutomation": "NO automatiza ninguna mecánica del juego.",
         "localProcessing": "Los datos se procesan localmente solo para generar el Excel."
     },
+    "loading": {
+        "processing": "Procesando..."
+    },
     "errors": {
         "dataNotFound": "Datos no encontrados. Asegúrate de estar en tu ciudad.",
-        "cityEntitiesNotFound": "CityEntities no encontrado."
+        "cityEntitiesNotFound": "CityEntities no encontrado.",
+        "exportJsonError": "Error exportando JSON: {message}"
     },
     "excel": {
         "name": "Nombre",

@@ -12,6 +12,7 @@ debug_keys.js
 src/config.js
 test/
 STORE_LISTING.md
+STORE_LISTING.docx
 forge_data_v1.2.zip
 forge_data_local.zip
 forge_data_v1.2.1.zip
@@ -22,3 +23,7 @@ lib/icons/
 *.py
 *_check.xlsx
 forge_data_v1.2.3.zip
+forge_data_v1.2.4.zip
+
+# Antigravity agent config
+.agent/

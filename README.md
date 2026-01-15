@@ -12,21 +12,17 @@ The goal is to help you make strategic decisions based on real efficiency data f
 
 ![Screenshot](store_screenshot.png)
 
-### ✨ New in v1.2.3
-- **Multilanguage Support**: The extension now supports 5 languages (English, Spanish, French, German, Italian)
-- **Auto-detection**: Automatically detects your browser's language
-- **Language Selector**: Choose your preferred language in Settings
-- **Version Display**: See the current version in Settings
+### ✨ New in v1.2.4
+- **Fixed ZIP packaging**: Now includes all required libraries (exceljs, xlsx)
+- **Complete translations**: All error messages and loading states now translated in all 5 languages
 
 ### ⚠️ Transparency &amp; Privacy
 
 This tool has been designed respecting fair play rules:
 
-*   **NOT a bot:** Does not perform any automatic actions in the game. Your account will never take actions without your direct interaction.
+*   **NOT a bot:** Does not perform any automatic actions in the game.
 *   **NO personal data collection:** All game data is processed **locally**.
-*   **Anonymous Usage Statistics:** The extension counts how many times export buttons are used (e.g., "Export Efficiency") to know which features are useful.
-    *   This feature is **completely anonymous** (uses a random ID, not your username).
-    *   You can **disable it** at any time from Settings.
+*   **Anonymous Usage Statistics (Optional):** Uses a random ID, not your username. Disable anytime in Settings.
 *   **Does NOT alter the game:** Works only by reading data that the game sends to your browser.
 
 ### Features
@@ -34,18 +30,33 @@ This tool has been designed respecting fair play rules:
 #### 1. 📊 City Efficiency Analysis (Excel)
 Generates a detailed Excel report of **your current city**, calculating the real efficiency of each building.
 
-*   **Efficiency Formula:** Calculates the military boost offered per occupied tile, considering building size and road requirements.
-*   **Separate sheets:** Organizes data for different game modes:
-    *   **Full Bonus:** Global efficiency.
-    *   **BG Bonus:** Specific for Battlegrounds.
-    *   **GE Bonus:** Specific for Guild Expedition.
-    *   **QI Bonus:** Specific for Quantum Incursions.
+*   **Military Efficiency:** Attack/Defense boost per occupied tile
+*   **Resource Efficiency:** Forge Points and Goods per tile
+*   **Considers:** Building size + road requirements
+*   **5 Separate sheets:**
+    *   **Full Bonus:** Global efficiency
+    *   **BG Bonus:** Battlegrounds
+    *   **GE Bonus:** Guild Expedition
+    *   **QI Bonus:** Quantum Incursions
+    *   **Excluded:** Buildings without military boosts
+*   Groups duplicate buildings showing quantity
 
 #### 2. 📚 Complete Game Catalog (Excel)
 Download a database with **all buildings that exist in the game**, organized by Era.
 
-*   Ideal for planning future cities or comparing buildings you don't have yet.
-*   Includes attack/defense stats for different modes.
+*   Organized by Era (22 eras)
+*   Attack/defense stats for all game modes
+*   Ideal for planning future cities
+*   Compare buildings you don't have yet
+
+#### 3. 🎨 Visual Icons in Excel
+*   Headers include icons for FP, Goods, and efficiency modes
+*   Tooltips on each icon cell showing the column name
+
+#### 4. 🌍 Multilanguage Support
+*   Available in English, Spanish, French, German, and Italian
+*   Auto-detects your browser language
+*   Manual language selector in Settings
 
 ### Installation
 
@@ -66,9 +77,8 @@ The extension will process the data and automatically download the corresponding
 
 ### Settings
 
-In the extension settings menu you can configure:
-*   **Download location:** Save to default folder, a specific subfolder ("FoE_Data"), or always ask where to save each file.
-*   **Language:** Choose from English, Spanish, French, German, or Italian.
+*   **Download location:** Default folder, specific subfolder ("FoE_Data"), or always ask.
+*   **Language:** English, Spanish, French, German, or Italian.
 *   **Anonymous statistics:** Enable or disable usage tracking.
 
 ---
@@ -81,21 +91,17 @@ El objetivo es ayudarte a tomar decisiones estratégicas basadas en datos reales
 
 ![Captura de pantalla](store_screenshot.png)
 
-### ✨ Nuevo en v1.2.3
-- **Soporte Multilenguaje**: La extensión ahora soporta 5 idiomas (Inglés, Español, Francés, Alemán, Italiano)
-- **Auto-detección**: Detecta automáticamente el idioma de tu navegador
-- **Selector de Idioma**: Elige tu idioma preferido en Configuración
-- **Versión visible**: Consulta la versión actual en Configuración
+### ✨ Nuevo en v1.2.4
+- **Corregido empaquetado ZIP**: Ahora incluye todas las bibliotecas necesarias (exceljs, xlsx)
+- **Traducciones completas**: Todos los mensajes de error y estados de carga traducidos en los 5 idiomas
 
 ### ⚠️ Transparencia y Privacidad
 
 Esta herramienta ha sido diseñada respetando las normas de juego limpio:
 
-*   **NO es un bot:** No realiza ninguna acción automática en el juego. Tu cuenta nunca realizará acciones sin tu interacción directa.
-*   **NO recoge datos personales:** Todos los datos del juego se procesan **localmente**. 
-*   **Estadísticas de Uso Anónimas:** La extensión cuenta las veces que se usan los botones de exportación (ej: "Exportar Eficiencia") para saber qué funciones son útiles.
-    *   Esta función es **totalmente anónima** (usa un ID aleatorio, no tu usuario).
-    *   Puedes **desactivarla** en cualquier momento desde la Configuración.
+*   **NO es un bot:** No realiza ninguna acción automática en el juego.
+*   **NO recoge datos personales:** Todos los datos del juego se procesan **localmente**.
+*   **Estadísticas de Uso Anónimas (Opcional):** Usa un ID aleatorio, no tu usuario. Desactívalo en Configuración.
 *   **NO altera el juego:** Funciona únicamente leyendo los datos que el juego envía a tu navegador.
 
 ### Funcionalidades
@@ -103,18 +109,33 @@ Esta herramienta ha sido diseñada respetando las normas de juego limpio:
 #### 1. 📊 Análisis de Eficiencia de Ciudad (Excel)
 Genera un informe detallado en Excel de **tu ciudad actual**, calculando la eficiencia real de cada edificio.
 
-*   **Fórmula de Eficiencia:** Calcula el boost militar ofrecido por cada casilla ocupada, teniendo en cuenta el tamaño del edificio y si requiere carretera.
-*   **Hojas separadas:** Organiza los datos para diferentes modos de juego:
-    *   **Bono Completo:** Eficiencia global.
-    *   **Bono CdB:** Específico para Campos de Batalla.
-    *   **Bono Expe:** Específico para Expedición de Gremio.
-    *   **Bono IC:** Específico para Incursiones Cuánticas.
+*   **Eficiencia Militar:** Boost de Ataque/Defensa por casilla ocupada
+*   **Eficiencia de Recursos:** Puntos Forge y Bienes por casilla
+*   **Considera:** Tamaño del edificio + requisito de calle
+*   **5 Hojas separadas:**
+    *   **Bono Completo:** Eficiencia global
+    *   **Bono CdB:** Campos de Batalla
+    *   **Bono Expe:** Expedición de Gremio
+    *   **Bono IC:** Incursiones Cuánticas
+    *   **Excluídos:** Edificios sin boosts militares
+*   Agrupa edificios duplicados mostrando cantidad
 
 #### 2. 📚 Catálogo Completo del Juego (Excel)
 Descarga una base de datos con **todos los edificios que existen en el juego**, organizados por Era.
 
-*   Ideal para planificar futuras ciudades o comparar edificios que aún no tienes.
-*   Incluye estadísticas de ataque/defensa para diferentes modos.
+*   Organizado por Era (22 eras)
+*   Estadísticas de ataque/defensa para todos los modos
+*   Ideal para planificar futuras ciudades
+*   Compara edificios que aún no tienes
+
+#### 3. 🎨 Iconos Visuales en Excel
+*   Las cabeceras incluyen iconos para FP, Bienes y modos de eficiencia
+*   Tooltips en cada celda de icono mostrando el nombre de la columna
+
+#### 4. 🌍 Soporte Multilenguaje
+*   Disponible en Inglés, Español, Francés, Alemán e Italiano
+*   Detecta automáticamente el idioma de tu navegador
+*   Selector de idioma manual en Configuración
 
 ### Instalación
 
@@ -133,22 +154,12 @@ Descarga una base de datos con **todos los edificios que existen en el juego**, 
 
 La extensión procesará los datos y descargará automáticamente el archivo `.xlsx` correspondiente.
 
-### Configuración 
+### Configuración
 
-En el menú de ajustes de la extensión puedes configurar:
-*   **Ubicación de descarga:** Guardar en la carpeta por defecto, en una subcarpeta específica ("FoE_Data") o preguntar siempre dónde guardar cada archivo.
-*   **Idioma:** Elige entre Inglés, Español, Francés, Alemán o Italiano.
+*   **Ubicación de descarga:** Carpeta por defecto, subcarpeta específica ("FoE_Data") o preguntar siempre.
+*   **Idioma:** Inglés, Español, Francés, Alemán o Italiano.
 *   **Estadísticas anónimas:** Activa o desactiva el seguimiento de uso.
 
 ---
 
 **Note / Nota:** This extension is not affiliated with or endorsed by InnoGames. It is a tool created by fans for fans. / Esta extensión no está afiliada ni respaldada por InnoGames. Es una herramienta creada por fans para fans.
-### ✨ New in v1.2.3
-- **Visual Icons in Excel**: Headers now include icons for FP, Goods, and all efficiency modes
-- **Enhanced Efficiency Display**: Mode-specific icons (Global, BG, GE, QI) for better readability
-- Bug fixes and performance improvements
-
-### ✨ Nuevo en v1.2.3
-- **Iconos visuales en Excel**: Las cabeceras ahora incluyen iconos para FP, Bienes y todos los modos de eficiencia
-- **Visualización de eficiencia mejorada**: Iconos específicos por modo (Global, CdB, Expe, IC) para mejor legibilidad
-- Corrección de errores y mejoras de rendimiento

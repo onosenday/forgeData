@@ -416,7 +416,7 @@ async function exportData(type) {
                         const data = robustClone(rawData);
                         return { type: 'json', data: data, filename: `foe_data_${timestamp}.json` };
                     } catch (e) {
-                        return { type: 'error', message: 'Error exportando JSON: ' + e.message };
+                        return { type: 'error', message: t('errors.exportJsonError', { message: e.message }) };
                     }
                 }
 
@@ -429,7 +429,7 @@ async function exportData(type) {
                     const cityMapData = FoEDataParser.CityMapData;
 
                     if (!cityMapData || !buildingData) {
-                        return { type: 'error', message: 'Datos no encontrados. Asegúrate de estar en tu ciudad.' };
+                        return { type: 'error', message: t('errors.dataNotFound') };
                     }
 
                     // console.log('CityMapData:', Object.keys(cityMapData).length, 'edificios');
@@ -613,7 +613,7 @@ async function exportData(type) {
                     const catalog = FoEDataParser.CityEntities;
 
                     if (!catalog) {
-                        return { type: 'error', message: 'CityEntities no encontrado.' };
+                        return { type: 'error', message: t('errors.cityEntitiesNotFound') };
                     }
 
                     // console.log('CityEntities para catálogo:', Object.keys(catalog).length, 'edificios');

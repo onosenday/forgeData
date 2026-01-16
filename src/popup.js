@@ -696,12 +696,12 @@ async function exportData(type) {
                             // Guild Expedition (Expe)
                             'guild_expedition_att_def_boost_attacker': ['guild_expedition_att_boost_attacker', 'guild_expedition_def_boost_attacker'],
                             'guild_expedition_att_def_boost_defender': ['guild_expedition_att_boost_defender', 'guild_expedition_def_boost_defender'],
-                            'guild_expedition_att_def_boost_attacker_defender': ['guild_expedition_att_boost_attacker', 'guild_expedition_def_boost_attacker', 'guild_expedition-def_boost_defender', 'guild_expedition-def_boost_defender'],// CORREGIDO
+                            'guild_expedition_att_def_boost_attacker_defender': ['guild_expedition_att_boost_attacker', 'guild_expedition_def_boost_attacker', 'guild_expedition_att_boost_defender', 'guild_expedition_def_boost_defender'],
 
                             // Guild Raids (IC)
                             'guild_raids_att_def_boost_attacker': ['guild_raids_att_boost_attacker', 'guild_raids_def_boost_attacker'],
                             'guild_raids_att_def_boost_defender': ['guild_raids_att_boost_defender', 'guild_raids_def_boost_defender'],
-                            'guild_raids_att_def_boost_attacker_defender': ['guild_raids_att_boost_attacker', 'guild_raids_def_boost_attacker', 'guild_raids-att_boost_defender', 'guild_raids-def_boost_defender']// CORREGIDO
+                            'guild_raids_att_def_boost_attacker_defender': ['guild_raids_att_boost_attacker', 'guild_raids_def_boost_attacker', 'guild_raids_att_boost_defender', 'guild_raids_def_boost_defender']
                         };
 
                         for (const key in boosts) {
@@ -794,11 +794,9 @@ async function exportData(type) {
 
                             rows.push({
                                 Nombre: entry.name || entityId,
-                                Eficiencia: efficiency,
-                                Ancho: width,
-                                Largo: length,
                                 Tamaño: width * length,
-                                Calle: streetLevel,
+                                Calle: needStreetAsText(streetLevel),
+                                Eficiencia: efficiency,
                                 FPS: resources.fps,
                                 Bienes: resources.goods,
                                 'Eficiencia FP': eff_fps,
@@ -821,9 +819,9 @@ async function exportData(type) {
                         // Ordenar columnas según preferencia
                         const currentEraBoostCols = allExportCols.filter(c => allBoostCols.has(c));
 
-                        const newCols = ['FPS', 'Bienes', 'Eficiencia CdB', 'Eficiencia IC', 'Eficiencia Expe', 'Global + CdB', 'Global + IC', 'Global + Expe', 'Eficiencia FP', 'Eficiencia Bienes'];
+                        const effCols = ['Eficiencia CdB', 'Eficiencia IC', 'Eficiencia Expe', 'Global + CdB', 'Global + IC', 'Global + Expe', 'Eficiencia FP', 'Eficiencia Bienes'];
 
-                        const finalCols = ['Nombre', 'Eficiencia', ...newCols, ...currentEraBoostCols, 'Ancho', 'Largo', 'Tamaño', 'Calle'];
+                        const finalCols = ['Nombre', 'Tamaño', 'Calle', 'FPS', 'Bienes', 'Eficiencia', ...effCols, ...currentEraBoostCols];
 
                         // Crear filas para Excel
                         const sheetRows = [finalCols];

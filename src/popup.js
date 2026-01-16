@@ -823,9 +823,9 @@ async function exportData(type) {
                         // Ordenar columnas según preferencia
                         const currentEraBoostCols = allExportCols.filter(c => allBoostCols.has(c));
 
-                        const effCols = ['Eficiencia CdB', 'Eficiencia IC', 'Eficiencia Expe', 'Global + CdB', 'Global + IC', 'Global + Expe', 'Eficiencia FP', 'Eficiencia Bienes'];
+                        const effCols = ['Eficiencia', 'Eficiencia CdB', 'Eficiencia IC', 'Eficiencia Expe', 'Global + CdB', 'Global + IC', 'Global + Expe', 'Eficiencia FP', 'Eficiencia Bienes'];
 
-                        const finalCols = ['Nombre', 'Tamaño', 'Calle', 'FPS', 'Bienes', 'Eficiencia', ...effCols, ...currentEraBoostCols];
+                        const finalCols = ['Nombre', 'Tamaño', 'Calle', 'FPS', 'Bienes', ...currentEraBoostCols, ...effCols];
 
                         // Crear filas para Excel
                         const sheetRows = [finalCols];
@@ -983,6 +983,9 @@ async function generateExcelWithIcons(sheets, filename, activeSheet = null) {
         'Eficiencia Global + CdB': 'efficiency_global_gbg',
         'Eficiencia Global + Expe': 'efficiency_global_ge',
         'Eficiencia Global + IC': 'efficiency_global_qi',
+        'Global + CdB': 'efficiency_global_gbg',
+        'Global + Expe': 'efficiency_global_ge',
+        'Global + IC': 'efficiency_global_qi',
 
         // Boosts
         'Ataque en Ataque': 'all_att_boost_attacker',

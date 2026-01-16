@@ -611,10 +611,14 @@ async function exportData(type) {
 
                 if (exportType === 'catalog') {
                     const catalog = FoEDataParser.CityEntities;
+                    const cityMapData = FoEDataParser.CityMapData;
 
                     if (!catalog) {
                         return { type: 'error', message: t('errors.cityEntitiesNotFound') };
                     }
+
+                    // Obtener la era del jugador para activar esa hoja
+                    const playerEra = cityMapData ? getTownHallEra(cityMapData) : null;
 
                     // console.log('CityEntities para catálogo:', Object.keys(catalog).length, 'edificios');
 
@@ -832,7 +836,7 @@ async function exportData(type) {
                         sheets[era] = sheetRows;
                     }
 
-                    return { type: 'catalog', sheets: sheets, boostCols: Array.from(new Set(allExportCols)), filename: `foe_catalog_${timestamp}.xlsx` };
+                    return { type: 'catalog', sheets: sheets, playerEra: playerEra, boostCols: Array.from(new Set(allExportCols)), filename: `foe_catalog_${timestamp}.xlsx` };
                 }
 
                 return null;
@@ -885,7 +889,7 @@ async function exportData(type) {
         if (result.type === 'catalog') {
             // Generar Catálogo con ExcelJS (con iconos)
             try {
-                const stats = await generateExcelWithIcons(result.sheets, result.filename);
+                const stats = await generateExcelWithIcons(result.sheets, result.filename, result.playerEra);
                 showToast(t('toast.catalogGenerated', { count: stats.totalRows }), 'success');
             } catch (e) {
                 console.error('Error generando Catálogo:', e);
@@ -945,8 +949,8 @@ function downloadBlob(blob, filename) {
 }
 
 // Función para generar Excel con iconos usando ExcelJS
-// Función para generar Excel con iconos usando ExcelJS
-async function generateExcelWithIcons(sheets, filename) {
+// activeSheet: nombre de la hoja que debe estar activa al abrir (opcional)
+async function generateExcelWithIcons(sheets, filename, activeSheet = null) {
     console.log('Iniciando generateExcelWithIcons...');
     const workbook = new ExcelJS.Workbook();
     workbook.creator = 'onosenday';
@@ -1106,6 +1110,20 @@ async function generateExcelWithIcons(sheets, filename) {
         const eficienciaIdx = headers.indexOf('Eficiencia');
         if (eficienciaIdx !== -1) {
             worksheet.getColumn(eficienciaIdx + 1).width = 12;
+        }
+    }
+
+    // Activar la hoja de la era del jugador si se especificó
+    if (activeSheet) {
+        const targetSheet = workbook.getWorksheet(activeSheet.substring(0, 31));
+        if (targetSheet) {
+            // Desactivar todas las hojas primero
+            workbook.eachSheet(sheet => {
+                sheet.state = 'visible';
+            });
+            // Activar la hoja objetivo
+            workbook.views = [{ activeTab: targetSheet.id - 1 }];
+            console.log(`Hoja activa establecida: ${activeSheet}`);
         }
     }
 

@@ -12,9 +12,10 @@ The goal is to help you make strategic decisions based on real efficiency data f
 
 ![Screenshot](store_screenshot.png)
 
-### ✨ New in v1.2.4
-- **Fixed ZIP packaging**: Now includes all required libraries (exceljs, xlsx)
-- **Complete translations**: All error messages and loading states now translated in all 5 languages
+### ✨ New in v1.2.5
+- **Excel Catalog improvements**: Reorganized columns for better readability
+- **Fixed Global+ icons**: Global+ efficiency icons now display correctly in headers
+- **Auto-active era sheet**: Excel catalog opens with the player's current era sheet active
 
 ### ⚠️ Transparency &amp; Privacy
 
@@ -91,9 +92,10 @@ El objetivo es ayudarte a tomar decisiones estratégicas basadas en datos reales
 
 ![Captura de pantalla](store_screenshot.png)
 
-### ✨ Nuevo en v1.2.4
-- **Corregido empaquetado ZIP**: Ahora incluye todas las bibliotecas necesarias (exceljs, xlsx)
-- **Traducciones completas**: Todos los mensajes de error y estados de carga traducidos en los 5 idiomas
+### ✨ Nuevo en v1.2.5
+- **Mejoras en Catálogo Excel**: Columnas reordenadas para mejor legibilidad
+- **Iconos Global+ corregidos**: Los iconos de eficiencia Global+ ahora se muestran correctamente
+- **Era activa automática**: El catálogo Excel se abre con la hoja de la era actual del jugador activa
 
 ### ⚠️ Transparencia y Privacidad
 

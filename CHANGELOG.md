@@ -7,6 +7,18 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ---
 
+## [1.2.5] - 2026-01-19
+
+### Fixed
+- **Catálogo Excel mejorado**: Reordenación de columnas para mejor legibilidad
+- **Iconos Global+ corregidos**: Los iconos de eficiencia Global+ ahora se muestran correctamente en las cabeceras
+- **Cálculos de boost corregidos**: Correcciones en columnas, orden y cálculos de boost en el catálogo
+
+### Added
+- **Era activa automática**: El catálogo Excel ahora se abre con la hoja de la era actual del jugador activa
+
+---
+
 ## [1.2.4] - 2026-01-15
 
 ### Fixed
